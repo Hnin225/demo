@@ -120,10 +120,3 @@ demo/
 - `POST /video/api/save` - 등록/수정
 - `DELETE /video/api/delete/{id}` - 삭제
 
-## 📸 스크린샷
-
-### 공지사항 목록
-![공지사항](screenshots/notice-list.png)
-
-### 보도자료 작성
-![보도자료](screenshots/press-write.png)
