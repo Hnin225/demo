@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>공지사항 작성 - 안양 스마트도시 통합센터</title>
+    <title>공지사항 상세 - 안양 스마트도시 통합센터</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -212,8 +212,6 @@
             border-radius: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 1000px;
-            margin: 0 auto;
         }
 
         .page-title {
@@ -228,126 +226,101 @@
             gap: 12px;
         }
 
-        /* 폼 스타일 */
-        .form-group {
-            margin-bottom: 30px;
+        /* 상세 정보 */
+        .detail-header {
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 25px;
+            margin-bottom: 35px;
         }
 
-        .form-label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 15px;
+        .detail-title {
+            font-size: 26px;
+            color: white;
+            margin-bottom: 20px;
+            line-height: 1.4;
         }
 
-        .required {
-            color: #f87171;
-            margin-left: 5px;
-        }
-
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: 14px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
+        .detail-meta {
+            display: flex;
+            gap: 25px;
             font-size: 14px;
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
-            font-family: inherit;
+            color: rgba(255, 255, 255, 0.7);
+            flex-wrap: wrap;
         }
 
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: #2a5298;
-            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .form-input::placeholder, .form-textarea::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .form-select {
-            cursor: pointer;
-        }
-
-        .form-select option {
-            background: #1a1f3a;
-            color: white;
-        }
-
-        .form-textarea {
-            min-height: 300px;
-            resize: vertical;
-        }
-
-        .form-text {
-            margin-top: 8px;
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .checkbox-group {
+        .meta-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 15px;
+            gap: 8px;
+        }
+
+        .category-badge {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(42, 82, 152, 0.3);
+        }
+
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        .status-reserved {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .status-ended {
+            background: rgba(248, 113, 113, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+
+        /* 내용 */
+        .detail-content {
+            font-size: 16px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            min-height: 300px;
+            padding: 30px 0;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            white-space: pre-wrap;
+        }
+
+        /* 첨부파일 */
+        .attachment-section {
+            margin-top: 35px;
+            padding: 25px;
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
+            border-radius: 15px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .checkbox-input {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            accent-color: #2a5298;
+        .attachment-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 20px;
         }
 
-        .checkbox-group label {
-            color: rgba(255, 255, 255, 0.8);
-            cursor: pointer;
+        .attachment-list {
+            list-style: none;
         }
 
-        /* 파일 업로드 */
-        .file-upload-area {
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            padding: 40px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.03);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .file-upload-area:hover {
-            border-color: #2a5298;
-            background: rgba(42, 82, 152, 0.1);
-        }
-
-        .file-upload-area p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 16px;
-        }
-
-        .file-upload-area p:last-child {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 10px;
-        }
-
-        .file-input {
-            display: none;
-        }
-
-        .file-list {
-            margin-top: 20px;
-        }
-
-        .file-item {
+        .attachment-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -355,72 +328,103 @@
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
         }
 
-        .file-item-info {
+        .attachment-item:hover {
+            background: rgba(42, 82, 152, 0.1);
+            border-color: rgba(42, 82, 152, 0.3);
+        }
+
+        .attachment-info {
             display: flex;
             align-items: center;
             gap: 12px;
-            color: rgba(255, 255, 255, 0.9);
         }
 
-        .file-remove {
-            background: rgba(255, 87, 87, 0.2);
-            color: #f87171;
-            border: 1px solid rgba(255, 87, 87, 0.3);
-            padding: 6px 15px;
+        .attachment-icon {
+            font-size: 22px;
+        }
+
+        .attachment-name {
+            font-size: 14px;
+            color: white;
+        }
+
+        .attachment-size {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-download {
+            padding: 8px 20px;
+            background: rgba(42, 82, 152, 0.2);
+            color: #7dd3fc;
+            border: 1px solid rgba(42, 82, 152, 0.3);
             border-radius: 8px;
             cursor: pointer;
             font-size: 13px;
             font-weight: 600;
+            text-decoration: none;
             transition: all 0.3s;
         }
 
-        .file-remove:hover {
-            background: rgba(255, 87, 87, 0.3);
+        .btn-download:hover {
+            background: rgba(42, 82, 152, 0.3);
             transform: translateY(-2px);
         }
 
-        /* 버튼 */
+        /* 버튼 그룹 */
         .btn-group {
             display: flex;
             gap: 15px;
             justify-content: center;
             margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .btn {
-            padding: 14px 40px;
+            padding: 12px 35px;
             border: none;
             border-radius: 10px;
             cursor: pointer;
             font-size: 15px;
             font-weight: 600;
             transition: all 0.3s;
+            text-decoration: none;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(42, 82, 152, 0.5);
-        }
-
-        .btn-secondary {
+        .btn-list {
             background: rgba(108, 117, 125, 0.3);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .btn-secondary:hover {
+        .btn-list:hover {
             background: rgba(108, 117, 125, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-edit {
+            background: rgba(42, 82, 152, 0.2);
+            color: #7dd3fc;
+            border: 1px solid rgba(42, 82, 152, 0.3);
+        }
+
+        .btn-edit:hover {
+            background: rgba(42, 82, 152, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: rgba(255, 87, 87, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(255, 87, 87, 0.3);
+        }
+
+        .btn-delete:hover {
+            background: rgba(255, 87, 87, 0.3);
             transform: translateY(-2px);
         }
 
@@ -524,272 +528,121 @@
     <!-- 메인 컨텐츠 -->
     <div class="main-content">
         <div class="content-box">
-            <h1 class="page-title">📝 공지사항 작성</h1>
+            <h1 class="page-title">📢 공지사항 상세</h1>
 
-            <form id="noticeForm" enctype="multipart/form-data">
-                <!-- 분류 -->
-                <div class="form-group">
-                    <label class="form-label">분류<span class="required">*</span></label>
-                    <select class="form-select" id="category" name="category" required>
-                        <option value="">선택하세요</option>
-                        <option value="안전">안전</option>
-                        <option value="교통">교통</option>
-                        <option value="환경">환경</option>
-                        <option value="복지">복지</option>
-                        <option value="행사">행사</option>
-                        <option value="일반">일반</option>
-                    </select>
+            <!-- 상세 헤더 -->
+            <div class="detail-header">
+                <div style="margin-bottom: 15px;">
+                    <span class="category-badge" th:text="${notice.category}">분류</span>
+                    <span th:if="${notice.status == '게시 중'}" class="status-badge status-active">게시 중</span>
+                    <span th:if="${notice.status == '예약'}" class="status-badge status-reserved">예약</span>
+                    <span th:if="${notice.status == '게시 종료'}" class="status-badge status-ended">게시 종료</span>
                 </div>
 
-                <!-- 제목 -->
-                <div class="form-group">
-                    <label class="form-label">제목<span class="required">*</span></label>
-                    <input type="text"
-                           class="form-input"
-                           id="title"
-                           name="title"
-                           required
-                           maxlength="200"
-                           placeholder="제목을 입력하세요">
-                </div>
+                <h2 class="detail-title" th:text="${notice.title}">공지사항 제목</h2>
 
-                <!-- 내용 -->
-                <div class="form-group">
-                    <label class="form-label">내용<span class="required">*</span></label>
-                    <textarea class="form-textarea"
-                              id="content"
-                              name="content"
-                              required
-                              placeholder="내용을 입력하세요"></textarea>
-                </div>
-
-                <!-- 작성자 -->
-                <div class="form-group">
-                    <label class="form-label">작성자</label>
-                    <input type="text"
-                           class="form-input"
-                           id="author"
-                           name="author"
-                           placeholder="작성자 이름 (비워두면 '관리자'로 표시)">
-                </div>
-
-                <!-- 게시 기간 -->
-                <div class="form-group">
-                    <label class="form-label">게시 시작일<span class="required">*</span></label>
-                    <input type="datetime-local"
-                           class="form-input"
-                           id="startDate"
-                           name="startDate"
-                           required>
-                    <p class="form-text">현재 일자보다 미래로 설정하면 예약 상태가 됩니다.</p>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">게시 종료일<span class="required">*</span></label>
-                    <input type="datetime-local"
-                           class="form-input"
-                           id="endDate"
-                           name="endDate"
-                           required>
-                    <p class="form-text">시작일로부터 +30일 권장</p>
-                </div>
-
-                <!-- 상단 고정 -->
-                <div class="form-group">
-                    <div class="checkbox-group">
-                        <input type="checkbox"
-                               class="checkbox-input"
-                               id="pinned"
-                               name="pinned">
-                        <label for="pinned">상단 고정 게시글로 설정</label>
+                <div class="detail-meta">
+                    <div class="meta-item">
+                        <span>👤</span>
+                        <span th:text="${notice.author != null ? notice.author : '관리자'}">작성자</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>📅</span>
+                        <span th:text="${#temporals.format(notice.createdAt, 'yyyy.MM.dd HH:mm')}">작성일</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>👁️</span>
+                        <span th:text="${notice.viewCount}">0</span>
+                    </div>
+                    <div class="meta-item" th:if="${notice.startDate != null}">
+                        <span>⏰</span>
+                        <span th:text="'게시: ' + ${#temporals.format(notice.startDate, 'yyyy.MM.dd')} + ' ~ ' + ${#temporals.format(notice.endDate, 'yyyy.MM.dd')}">게시기간</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- 첨부파일 -->
-                <div class="form-group">
-                    <label class="form-label">첨부파일 (최대 5개, 총 90MB)</label>
-                    <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
-                        <p>📁 파일을 선택하거나 드래그하세요</p>
-                        <p>jpg, jpeg, png, svg, gif, hwp, doc, docx, pdf, ppt, pptx, txt, xls, xlsx, gz, zip</p>
-                    </div>
-                    <input type="file"
-                           id="fileInput"
-                           name="files"
-                           multiple
-                           accept=".jpg,.jpeg,.png,.svg,.gif,.hwp,.doc,.docx,.pdf,.ppt,.pptx,.txt,.xls,.xlsx,.gz,.zip"
-                           class="file-input"
-                           onchange="handleFileSelect(event)">
-                    <div id="fileList" class="file-list"></div>
-                </div>
+            <!-- 내용 -->
+            <div class="detail-content" th:text="${notice.content}">
+                공지사항 내용이 여기에 표시됩니다.
+            </div>
 
-                <!-- 버튼 그룹 -->
-                <div class="btn-group">
-                    <button type="button" class="btn btn-secondary" onclick="confirmBack()">돌아가기</button>
-                    <button type="submit" class="btn btn-primary">게시하기</button>
-                </div>
-            </form>
-        </div>
-    </div>
+            <!-- 첨부파일 -->
+            <div class="attachment-section" th:if="${attachments != null && !attachments.isEmpty()}">
+                <h3 class="attachment-title">📎 첨부파일 (<span th:text="${#lists.size(attachments)}">0</span>)</h3>
+                <ul class="attachment-list">
+                    <li class="attachment-item" th:each="attachment : ${attachments}">
+                        <div class="attachment-info">
+                            <span class="attachment-icon">📄</span>
+                            <div>
+                                <div class="attachment-name" th:text="${attachment.fileName}">파일명</div>
+                                <div class="attachment-size" th:text="${#numbers.formatDecimal(attachment.fileSize / 1024.0, 1, 2)} + ' KB'">파일크기</div>
+                            </div>
+                        </div>
+                        <a th:href="@{/notice/download/{id}(id=${attachment.id})}"
+                           class="btn-download"
+                           download>다운로드</a>
+                    </li>
+                </ul>
+            </div>
 
-    <!-- 돌아가기 확인 모달 -->
-    <div id="backModal" class="modal">
-        <div class="modal-content">
-            <h3>게시글 작성 취소</h3>
-            <p>작성 중이던 문서가 저장되지 않습니다.<br>정말로 이 페이지에서 벗어나시겠습니까?</p>
-            <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeBackModal()">취소</button>
-                <button class="btn btn-primary" onclick="goBack()">확인</button>
+            <!-- 버튼 그룹 -->
+            <div class="btn-group">
+                <a href="/notice/list" class="btn btn-list">목록으로</a>
+                <a th:href="@{/notice/edit/{id}(id=${notice.id})}" class="btn btn-edit">수정하기</a>
+                <button type="button" class="btn btn-delete" th:onclick="'deleteNotice(' + ${notice.id} + ')'">삭제하기</button>
             </div>
         </div>
     </div>
 
-    <script>
-        let selectedFiles = [];
+    <!-- 삭제 확인 모달 -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h3>게시글 삭제</h3>
+            <p>게시글을 정말 삭제하시겠습니까?<br>삭제된 목록은 복구할 수 없습니다.</p>
+            <div class="modal-buttons">
+                <button class="btn btn-list" onclick="closeDeleteModal()">취소</button>
+                <button class="btn btn-delete" onclick="confirmDelete()">확인</button>
+            </div>
+        </div>
+    </div>
 
-        // 파일 선택 처리
-        function handleFileSelect(event) {
-            const files = Array.from(event.target.files);
+    <script th:inline="javascript">
+        let deleteId = null;
 
-            if (selectedFiles.length + files.length > 5) {
-                alert('최대 5개의 첨부파일만 업로드 가능합니다.');
-                event.target.value = '';
-                return;
+        function deleteNotice(id) {
+            deleteId = id;
+            document.getElementById('deleteModal').style.display = 'block';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            deleteId = null;
+        }
+
+        function confirmDelete() {
+            if (deleteId) {
+                fetch(`/notice/api/delete/${deleteId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data);
+                    location.href = '/notice/list';
+                })
+                .catch(error => {
+                    alert('삭제 중 오류가 발생했습니다.');
+                    console.error('Error:', error);
+                });
             }
+        }
 
-            let totalSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
-            totalSize += files.reduce((sum, file) => sum + file.size, 0);
-
-            if (totalSize > 90 * 1024 * 1024) {
-                alert('총 90MB의 파일을 업로드 할 수 없습니다.');
-                event.target.value = '';
-                return;
+        // 모달 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            const modal = document.getElementById('deleteModal');
+            if (event.target === modal) {
+                closeDeleteModal();
             }
-
-            selectedFiles = selectedFiles.concat(files);
-            displayFileList();
-            event.target.value = '';
         }
-
-        // 파일 목록 표시
-        function displayFileList() {
-            const fileListDiv = document.getElementById('fileList');
-            fileListDiv.innerHTML = '';
-
-            selectedFiles.forEach((file, index) => {
-                const fileItem = document.createElement('div');
-                fileItem.className = 'file-item';
-
-                const fileInfo = document.createElement('div');
-                fileInfo.className = 'file-item-info';
-                fileInfo.innerHTML = `
-                    <span>📎</span>
-                    <span>${file.name} (${formatFileSize(file.size)})</span>
-                `;
-
-                const removeBtn = document.createElement('button');
-                removeBtn.className = 'file-remove';
-                removeBtn.textContent = '삭제';
-                removeBtn.type = 'button';
-                removeBtn.onclick = () => removeFile(index);
-
-                fileItem.appendChild(fileInfo);
-                fileItem.appendChild(removeBtn);
-                fileListDiv.appendChild(fileItem);
-            });
-        }
-
-        // 파일 제거
-        function removeFile(index) {
-            selectedFiles.splice(index, 1);
-            displayFileList();
-        }
-
-        // 파일 크기 포맷
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
-        }
-
-        // 돌아가기 확인
-        function confirmBack() {
-            document.getElementById('backModal').style.display = 'block';
-        }
-
-        function closeBackModal() {
-            document.getElementById('backModal').style.display = 'none';
-        }
-
-        function goBack() {
-            location.href = '/notice/list';
-        }
-
-        // 현재 시간 + 30일 설정
-        window.onload = function() {
-            const now = new Date();
-            const startDate = new Date(now);
-            const endDate = new Date(now);
-            endDate.setDate(endDate.getDate() + 30);
-
-            document.getElementById('startDate').value = formatDateTime(startDate);
-            document.getElementById('endDate').value = formatDateTime(endDate);
-        };
-
-        function formatDateTime(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            return `${year}-${month}-${day}T${hours}:${minutes}`;
-        }
-
-        // 폼 제출
-        document.getElementById('noticeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const formData = new FormData();
-            formData.append('title', document.getElementById('title').value);
-            formData.append('content', document.getElementById('content').value);
-            formData.append('category', document.getElementById('category').value);
-            formData.append('author', document.getElementById('author').value);
-            formData.append('startDate', document.getElementById('startDate').value);
-            formData.append('endDate', document.getElementById('endDate').value);
-            formData.append('pinned', document.getElementById('pinned').checked);
-
-            selectedFiles.forEach(file => {
-                formData.append('files', file);
-            });
-
-            fetch('/notice/api/save', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(text => {
-                        throw new Error(text);
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === '예약') {
-                    const startDate = new Date(data.startDate);
-                    const dateStr = formatDateTime(startDate).replace('T', ' ');
-                    alert(`작성하신 글이 ${dateStr} 게시예정입니다.`);
-                } else {
-                    alert('작성하신 글이 게시되었습니다.');
-                }
-                location.href = '/notice/list';
-            })
-            .catch(error => {
-                alert('등록 중 오류가 발생했습니다:\n' + error.message);
-                console.error('Error:', error);
-            });
-        });
     </script>
 </body>
 </html>
