@@ -11,28 +11,35 @@
         }
 
         body {
-            font-family: 'Segoe UI', 'Malgun Gothic', Arial, sans-serif;
-            background: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
 
+        /* 상단바 */
         .top-bar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             height: 70px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 20px rgba(30, 60, 114, 0.3);
             display: flex;
             align-items: center;
             padding: 0 40px;
             justify-content: space-between;
-            position: relative;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
         .logo {
-            font-size: 22px;
-            font-weight: bold;
+            font-size: 20px;
+            font-weight: 700;
             color: white;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             cursor: pointer;
             text-decoration: none;
             transition: all 0.3s;
@@ -40,15 +47,22 @@
 
         .logo:hover {
             transform: scale(1.05);
+            opacity: 0.9;
         }
 
         .logo-icon {
             font-size: 28px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .top-menu {
             display: flex;
-            gap: 15px;
+            gap: 5px;
             align-items: center;
         }
 
@@ -60,14 +74,15 @@
             color: white;
             text-decoration: none;
             font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 20px;
+            border-radius: 8px;
             display: block;
             transition: all 0.3s;
+            font-size: 15px;
         }
 
         .menu-item > a:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .dropdown {
@@ -76,12 +91,24 @@
             top: 100%;
             left: 0;
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            min-width: 220px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            min-width: 240px;
             margin-top: 10px;
             z-index: 1000;
-            padding: 10px 0;
+            padding: 8px 0;
+            animation: dropdownSlide 0.3s ease-out;
+        }
+
+        @keyframes dropdownSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .menu-item:hover .dropdown {
@@ -89,144 +116,447 @@
         }
 
         .dropdown a {
-            display: block;
-            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
             color: #333;
             text-decoration: none;
             transition: all 0.3s;
             font-weight: 500;
+            font-size: 14px;
         }
 
         .dropdown a:hover {
-            background: #f0f4ff;
-            color: #667eea;
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.1) 0%, rgba(42, 82, 152, 0.1) 100%);
+            color: #1e3c72;
+            padding-left: 25px;
         }
 
         .logout-btn {
             padding: 10px 25px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             color: white;
-            border-radius: 8px;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            font-size: 14px;
+            margin-left: 15px;
         }
 
         .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.25);
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
+        /* 메인 컨테이너 */
         .main-container {
-            padding: 60px 50px;
+            padding: 50px 50px 80px;
             max-width: 1600px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 60px;
         }
 
         .page-title {
-            text-align: center;
             font-size: 42px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 70px;
-            font-weight: bold;
+            color: white;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+            text-shadow: 0 0 30px rgba(42, 82, 152, 0.5);
         }
 
+        .page-subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
+        }
+
+        /* 카드 그리드 */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 50px;
+            gap: 40px;
             margin-top: 40px;
         }
 
         .menu-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 45px;
+            padding: 40px;
             text-align: center;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-            transition: all 0.4s;
-            border: 2px solid transparent;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
         }
 
-        .menu-card:before {
+        .menu-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 6px;
+            background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .menu-card:hover::before {
+            transform: scaleX(1);
         }
 
         .menu-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 45px rgba(102, 126, 234, 0.3);
-            border-color: #667eea;
+            transform: translateY(-12px);
+            box-shadow: 0 20px 50px rgba(42, 82, 152, 0.4);
+            border-color: rgba(42, 82, 152, 0.5);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .menu-card-icon {
-            font-size: 48px;
+            font-size: 56px;
             margin-bottom: 20px;
+            display: inline-block;
+            transition: all 0.4s;
+        }
+
+        .menu-card:hover .menu-card-icon {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .menu-card-title {
-            font-size: 26px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 35px;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 30px;
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 20px rgba(42, 82, 152, 0.5);
         }
 
+        /* 메뉴 버튼 */
         .menu-buttons {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .menu-btn {
-            padding: 16px 30px;
-            background: white;
-            border: 2px solid #e0e0e0;
-            color: #555;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .menu-btn:before {
+        .menu-btn::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            transition: all 0.3s;
-            z-index: -1;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            transition: all 0.4s;
+            z-index: 0;
+        }
+
+        .menu-btn span {
+            position: relative;
+            z-index: 1;
         }
 
         .menu-btn:hover {
             color: white;
-            border-color: #667eea;
-            transform: translateX(5px);
+            border-color: #2a5298;
+            transform: translateX(8px);
+            box-shadow: 0 5px 20px rgba(42, 82, 152, 0.4);
         }
 
-        .menu-btn:hover:before {
+        .menu-btn:hover::before {
             left: 0;
+        }
+
+        /* IT 애니메이션 배경 */
+        .bg-decoration {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+        }
+
+        /* 격자 패턴 */
+        .grid-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(42, 82, 152, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(42, 82, 152, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        /* 빛나는 원형 */
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .bg-circle1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(30, 60, 114, 0.4) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .bg-circle2 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(42, 82, 152, 0.3) 0%, transparent 70%);
+            bottom: -80px;
+            left: -80px;
+            animation-delay: 3s;
+        }
+
+        .bg-circle3 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(116, 116, 191, 0.3) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            animation-delay: 6s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(30px, -30px) scale(1.1);
+            }
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+        }
+
+        /* 떠다니는 파티클 */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(42, 82, 152, 0.6);
+            border-radius: 50%;
+            animation: particleFloat 20s infinite linear;
+        }
+
+        .particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; top: 80%; animation-delay: 2s; }
+        .particle:nth-child(3) { left: 30%; top: 40%; animation-delay: 4s; }
+        .particle:nth-child(4) { left: 40%; top: 60%; animation-delay: 1s; }
+        .particle:nth-child(5) { left: 50%; top: 30%; animation-delay: 3s; }
+        .particle:nth-child(6) { left: 60%; top: 70%; animation-delay: 5s; }
+        .particle:nth-child(7) { left: 70%; top: 50%; animation-delay: 2.5s; }
+        .particle:nth-child(8) { left: 80%; top: 20%; animation-delay: 4.5s; }
+        .particle:nth-child(9) { left: 90%; top: 40%; animation-delay: 1.5s; }
+        .particle:nth-child(10) { left: 15%; top: 90%; animation-delay: 3.5s; }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* 회로 패턴 라인 */
+        .circuit-line {
+            position: absolute;
+            background: rgba(42, 82, 152, 0.3);
+            animation: circuitPulse 3s infinite ease-in-out;
+        }
+
+        .circuit-h1 {
+            width: 200px;
+            height: 2px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .circuit-h2 {
+            width: 150px;
+            height: 2px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        .circuit-v1 {
+            width: 2px;
+            height: 180px;
+            top: 30%;
+            left: 25%;
+            animation-delay: 0.5s;
+        }
+
+        .circuit-v2 {
+            width: 2px;
+            height: 150px;
+            top: 40%;
+            right: 30%;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes circuitPulse {
+            0%, 100% {
+                opacity: 0.3;
+                box-shadow: 0 0 5px rgba(42, 82, 152, 0.3);
+            }
+            50% {
+                opacity: 0.8;
+                box-shadow: 0 0 15px rgba(42, 82, 152, 0.8);
+            }
+        }
+
+        /* 반응형 */
+        @media (max-width: 1400px) {
+            .menu-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .top-menu {
+                display: none;
+            }
+
+            .main-container {
+                padding: 40px 20px;
+            }
+        }
+
+        /* 로딩 애니메이션 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .menu-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .menu-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .menu-card:nth-child(3) {
+            animation-delay: 0.3s;
         }
     </style>
 </head>
 <body>
+<!-- IT 애니메이션 배경 -->
+<div class="bg-decoration">
+    <!-- 격자 패턴 -->
+    <div class="grid-background"></div>
+
+    <!-- 빛나는 원형들 -->
+    <div class="bg-circle bg-circle1"></div>
+    <div class="bg-circle bg-circle2"></div>
+    <div class="bg-circle bg-circle3"></div>
+
+    <!-- 떠다니는 파티클 -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- 회로 패턴 라인 -->
+    <div class="circuit-line circuit-h1"></div>
+    <div class="circuit-line circuit-h2"></div>
+    <div class="circuit-line circuit-v1"></div>
+    <div class="circuit-line circuit-v2"></div>
+</div>
+
+<!-- 상단바 -->
 <div class="top-bar">
     <a href="/" class="logo">
         <span class="logo-icon">🏙️</span>
@@ -280,8 +610,12 @@
     </div>
 </div>
 
+<!-- 메인 컨테이너 -->
 <div class="main-container">
-    <h1 class="page-title">조회</h1>
+    <div class="page-header">
+        <h1 class="page-title">통합 관리 대시보드</h1>
+        <p class="page-subtitle">Smart City Integrated Management System</p>
+    </div>
 
     <div class="menu-grid">
         <!-- 시민 서비스 조회/관리 -->
@@ -289,10 +623,18 @@
             <div class="menu-card-icon">👥</div>
             <h2 class="menu-card-title">시민 서비스 조회/관리</h2>
             <div class="menu-buttons">
-                <a href="/notice/list" class="menu-btn">📢 공지사항</a>
-                <a href="/press/list" class="menu-btn">📰 보도자료</a>
-                <a href="/visit/list" class="menu-btn">📷 방문사진</a>
-                <a href="/video/list" class="menu-btn">🎥 홍보영상</a>
+                <a href="/notice/list" class="menu-btn">
+                    <span>📢 공지사항</span>
+                </a>
+                <a href="/press/list" class="menu-btn">
+                    <span>📰 보도자료</span>
+                </a>
+                <a href="/visit/list" class="menu-btn">
+                    <span>📷 방문사진</span>
+                </a>
+                <a href="/video/list" class="menu-btn">
+                    <span>🎥 홍보영상</span>
+                </a>
             </div>
         </div>
 
@@ -301,11 +643,21 @@
             <div class="menu-card-icon">⚙️</div>
             <h2 class="menu-card-title">운영 관리</h2>
             <div class="menu-buttons">
-                <a href="#" class="menu-btn">📊 운영 실적 통계</a>
-                <a href="/award/list" class="menu-btn">🏆 연도별 수상 이력</a>
-                <a href="#" class="menu-btn">🌍 방문 국가 관리</a>
-                <a href="#" class="menu-btn">📸 방문 사진 관리</a>
-                <a href="#" class="menu-btn">🏢 조직도 관리</a>
+                <a href="#" class="menu-btn">
+                    <span>📊 운영 실적 통계</span>
+                </a>
+                <a href="/award/list" class="menu-btn">
+                    <span>🏆 연도별 수상 이력</span>
+                </a>
+                <a href="#" class="menu-btn">
+                    <span>🌍 방문 국가 관리</span>
+                </a>
+                <a href="#" class="menu-btn">
+                    <span>📸 방문 사진 관리</span>
+                </a>
+                <a href="#" class="menu-btn">
+                    <span>🏢 조직도 관리</span>
+                </a>
             </div>
         </div>
 
@@ -314,12 +666,40 @@
             <div class="menu-card-icon">🏗️</div>
             <h2 class="menu-card-title">시설물 신고 관리</h2>
             <div class="menu-buttons">
-                <a href="#" class="menu-btn">📋 신고 접수 현황</a>
-                <a href="#" class="menu-btn">⚡ 신고 처리 방법</a>
-                <a href="#" class="menu-btn">🔧 시설물 관리</a>
+                <a href="#" class="menu-btn">
+                    <span>📋 신고 접수 현황</span>
+                </a>
+                <a href="#" class="menu-btn">
+                    <span>⚡ 신고 처리 방법</span>
+                </a>
+                <a href="#" class="menu-btn">
+                    <span>🔧 시설물 관리</span>
+                </a>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+        // 카드 호버 시 약간의 3D 효과
+        document.querySelectorAll('.menu-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-12px) scale(1.02)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // 드롭다운 메뉴 클릭 외부 감지
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.menu-item')) {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+        });
+    </script>
 </body>
 </html>
