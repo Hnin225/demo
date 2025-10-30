@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>공지사항 상세 - 안양 스마트도시 통합센터</title>
+    <title>보도자료 상세 - 안양 스마트도시 통합센터</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -254,21 +254,12 @@
             gap: 8px;
         }
 
-        .category-badge {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 6px 15px;
-            border-radius: 15px;
-            font-size: 13px;
-            font-weight: 600;
-            box-shadow: 0 2px 10px rgba(42, 82, 152, 0.3);
-        }
-
         .status-badge {
             padding: 6px 15px;
             border-radius: 15px;
             font-size: 13px;
             font-weight: 600;
+            margin-right: 10px;
         }
 
         .status-active {
@@ -518,8 +509,8 @@
     <div class="sidebar">
         <div class="sidebar-title">시민 서비스 조회/관리</div>
         <ul class="sidebar-menu">
-            <li><a href="/notice/list" class="active">📢 공지사항</a></li>
-            <li><a href="/press/list">📰 보도자료</a></li>
+            <li><a href="/notice/list">📢 공지사항</a></li>
+            <li><a href="/press/list" class="active">📰 보도자료</a></li>
             <li><a href="/visit/list">📷 방문사진</a></li>
             <li><a href="/video/list">🎥 홍보영상</a></li>
         </ul>
@@ -528,45 +519,41 @@
     <!-- 메인 컨텐츠 -->
     <div class="main-content">
         <div class="content-box">
-            <h1 class="page-title">📢 공지사항 상세</h1>
+            <h1 class="page-title">📰 보도자료 상세</h1>
 
-            <!-- 상세 헤더 -->
             <div class="detail-header">
                 <div style="margin-bottom: 15px;">
-                    <span class="category-badge" th:text="${notice.category}">분류</span>
-                    <span th:if="${notice.status == '게시 중'}" class="status-badge status-active">게시 중</span>
-                    <span th:if="${notice.status == '예약'}" class="status-badge status-reserved">예약</span>
-                    <span th:if="${notice.status == '게시 종료'}" class="status-badge status-ended">게시 종료</span>
+                    <span th:if="${press.status == '게시 중'}" class="status-badge status-active">게시 중</span>
+                    <span th:if="${press.status == '예약'}" class="status-badge status-reserved">예약</span>
+                    <span th:if="${press.status == '게시 종료'}" class="status-badge status-ended">게시 종료</span>
                 </div>
 
-                <h2 class="detail-title" th:text="${notice.title}">공지사항 제목</h2>
+                <h2 class="detail-title" th:text="${press.title}">보도자료 제목</h2>
 
                 <div class="detail-meta">
                     <div class="meta-item">
                         <span>👤</span>
-                        <span th:text="${notice.author != null ? notice.author : '관리자'}">작성자</span>
+                        <span th:text="${press.author != null ? press.author : '관리자'}">작성자</span>
                     </div>
                     <div class="meta-item">
                         <span>📅</span>
-                        <span th:text="${#temporals.format(notice.createdAt, 'yyyy.MM.dd HH:mm')}">작성일</span>
+                        <span th:text="${#temporals.format(press.createdAt, 'yyyy.MM.dd HH:mm')}">작성일</span>
                     </div>
                     <div class="meta-item">
                         <span>👁️</span>
-                        <span th:text="${notice.viewCount}">0</span>
+                        <span th:text="${press.viewCount}">0</span>
                     </div>
-                    <div class="meta-item" th:if="${notice.startDate != null}">
+                    <div class="meta-item" th:if="${press.startDate != null}">
                         <span>⏰</span>
-                        <span th:text="'게시: ' + ${#temporals.format(notice.startDate, 'yyyy.MM.dd')} + ' ~ ' + ${#temporals.format(notice.endDate, 'yyyy.MM.dd')}">게시기간</span>
+                        <span th:text="'게시: ' + ${#temporals.format(press.startDate, 'yyyy.MM.dd')} + ' ~ ' + ${#temporals.format(press.endDate, 'yyyy.MM.dd')}">게시기간</span>
                     </div>
                 </div>
             </div>
 
-            <!-- 내용 -->
-            <div class="detail-content" th:text="${notice.content}">
-                공지사항 내용이 여기에 표시됩니다.
+            <div class="detail-content" th:text="${press.content}">
+                보도자료 내용이 여기에 표시됩니다.
             </div>
 
-            <!-- 첨부파일 -->
             <div class="attachment-section" th:if="${attachments != null && !attachments.isEmpty()}">
                 <h3 class="attachment-title">📎 첨부파일 (<span th:text="${#lists.size(attachments)}">0</span>)</h3>
                 <ul class="attachment-list">
@@ -578,23 +565,21 @@
                                 <div class="attachment-size" th:text="${#numbers.formatDecimal(attachment.fileSize / 1024.0, 1, 2)} + ' KB'">파일크기</div>
                             </div>
                         </div>
-                        <a th:href="@{/notice/download/{id}(id=${attachment.id})}"
+                        <a th:href="@{/press/download/{id}(id=${attachment.id})}"
                            class="btn-download"
                            download>다운로드</a>
                     </li>
                 </ul>
             </div>
 
-            <!-- 버튼 그룹 -->
             <div class="btn-group">
-                <a href="/notice/list" class="btn btn-list">목록으로</a>
-                <a th:href="@{/notice/edit/{id}(id=${notice.id})}" class="btn btn-edit">수정하기</a>
-                <button type="button" class="btn btn-delete" th:onclick="'deleteNotice(' + ${notice.id} + ')'">삭제하기</button>
+                <a href="/press/list" class="btn btn-list">목록으로</a>
+                <a th:href="@{/press/edit/{id}(id=${press.id})}" class="btn btn-edit">수정하기</a>
+                <button type="button" class="btn btn-delete" th:onclick="'deletePress(' + ${press.id} + ')'">삭제하기</button>
             </div>
         </div>
     </div>
 
-    <!-- 삭제 확인 모달 -->
     <div id="deleteModal" class="modal">
         <div class="modal-content">
             <h3>게시글 삭제</h3>
@@ -609,7 +594,7 @@
     <script th:inline="javascript">
         let deleteId = null;
 
-        function deleteNotice(id) {
+        function deletePress(id) {
             deleteId = id;
             document.getElementById('deleteModal').style.display = 'block';
         }
@@ -621,13 +606,13 @@
 
         function confirmDelete() {
             if (deleteId) {
-                fetch(`/notice/api/delete/${deleteId}`, {
+                fetch(`/press/api/delete/${deleteId}`, {
                     method: 'DELETE'
                 })
                 .then(response => response.text())
                 .then(data => {
                     alert(data);
-                    location.href = '/notice/list';
+                    location.href = '/press/list';
                 })
                 .catch(error => {
                     alert('삭제 중 오류가 발생했습니다.');
@@ -636,7 +621,6 @@
             }
         }
 
-        // 모달 외부 클릭 시 닫기
         window.onclick = function(event) {
             const modal = document.getElementById('deleteModal');
             if (event.target === modal) {
