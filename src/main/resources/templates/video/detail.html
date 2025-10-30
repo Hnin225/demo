@@ -5,66 +5,164 @@
     <title>홍보영상 상세 - 안양 스마트도시 통합센터</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-        .top-bar {
-            background: white;
-            height: 60px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            padding: 0 30px;
+        /* IT 애니메이션 배경 */
+        .bg-decoration {
             position: fixed;
+            width: 100%;
+            height: 100%;
             top: 0;
             left: 0;
-            right: 0;
-            z-index: 100;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+        }
+
+        .grid-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(42, 82, 152, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(42, 82, 152, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .bg-circle1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(30, 60, 114, 0.4) 0%, transparent 70%);
+            top: -100px;
+            right: 10%;
+        }
+
+        .bg-circle2 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(42, 82, 152, 0.3) 0%, transparent 70%);
+            bottom: 10%;
+            left: 10%;
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* 상단바 */
+        .top-bar {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            height: 70px;
+            box-shadow: 0 4px 20px rgba(30, 60, 114, 0.3);
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
         .logo {
             font-size: 20px;
-            font-weight: bold;
-            color: #5B7FFF;
+            font-weight: 700;
+            color: white;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 10px;
         }
 
         .top-menu {
             margin-left: auto;
             display: flex;
-            gap: 30px;
+            gap: 10px;
+            align-items: center;
         }
 
         .top-menu a {
             text-decoration: none;
-            color: #666;
-            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .top-menu a:hover {
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .logout-btn {
-            padding: 8px 20px;
-            background: #ff5757;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
+            padding: 10px 25px !important;
+            background: rgba(255, 87, 87, 0.2) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 87, 87, 0.3) !important;
+            border-radius: 10px !important;
+            margin-left: 10px;
         }
 
+        /* 사이드바 */
         .sidebar {
-            width: 200px;
-            background: white;
+            width: 250px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             position: fixed;
             left: 0;
-            top: 60px;
+            top: 70px;
             bottom: 0;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-            padding: 20px 0;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+            padding: 30px 0;
             overflow-y: auto;
+            z-index: 100;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar-title {
-            padding: 0 20px 15px 20px;
-            font-size: 14px;
-            color: #999;
+            padding: 0 25px 20px 25px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .sidebar-menu {
@@ -72,117 +170,141 @@
         }
 
         .sidebar-menu li a {
-            display: block;
-            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 25px;
             text-decoration: none;
-            color: #333;
+            color: rgba(255, 255, 255, 0.8);
             transition: all 0.3s;
+            font-weight: 500;
+            border-left: 3px solid transparent;
         }
 
         .sidebar-menu li a:hover {
-            background: #f0f4ff;
-            color: #5B7FFF;
-            border-right: 3px solid #5B7FFF;
+            background: rgba(42, 82, 152, 0.2);
+            color: white;
+            border-left-color: #2a5298;
+            padding-left: 30px;
         }
 
         .sidebar-menu li a.active {
-            background: #5B7FFF;
+            background: linear-gradient(90deg, rgba(42, 82, 152, 0.3), transparent);
             color: white;
+            border-left-color: #2a5298;
+            font-weight: 600;
         }
 
+        /* 메인 컨텐츠 */
         .main-content {
-            margin-left: 200px;
-            margin-top: 60px;
-            padding: 30px;
-            min-height: calc(100vh - 60px);
+            margin-left: 250px;
+            margin-top: 70px;
+            padding: 40px;
+            min-height: calc(100vh - 70px);
+            position: relative;
+            z-index: 1;
         }
 
         .content-box {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .page-title {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #5B7FFF;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(42, 82, 152, 0.5);
+            text-shadow: 0 0 20px rgba(42, 82, 152, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
+        /* 상세 정보 */
         .detail-header {
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 25px;
+            margin-bottom: 35px;
         }
 
         .detail-title {
-            font-size: 28px;
-            color: #333;
-            margin-bottom: 15px;
+            font-size: 26px;
+            color: white;
+            margin-bottom: 20px;
             line-height: 1.4;
         }
 
         .detail-meta {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             font-size: 14px;
-            color: #666;
+            color: rgba(255, 255, 255, 0.7);
+            flex-wrap: wrap;
         }
 
         .meta-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
 
         .status-badge {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 6px 15px;
+            border-radius: 15px;
+            font-size: 13px;
             font-weight: 600;
             margin-right: 10px;
         }
 
         .status-active {
-            background: #d4edda;
-            color: #155724;
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(74, 222, 128, 0.3);
         }
 
         .status-reserved {
-            background: #fff3cd;
-            color: #856404;
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
         }
 
         .status-ended {
-            background: #f8d7da;
-            color: #721c24;
+            background: rgba(248, 113, 113, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(248, 113, 113, 0.3);
         }
 
+        /* 내용 */
         .detail-content {
             font-size: 16px;
             line-height: 1.8;
-            color: #333;
+            color: rgba(255, 255, 255, 0.9);
             min-height: 300px;
             padding: 30px 0;
-            border-bottom: 2px solid #e9ecef;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
             white-space: pre-wrap;
         }
 
+        /* 첨부파일 */
         .attachment-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
+            margin-top: 35px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .attachment-title {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
+            color: white;
+            margin-bottom: 20px;
         }
 
         .attachment-list {
@@ -193,261 +315,318 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 12px;
             transition: all 0.3s;
         }
 
         .attachment-item:hover {
-            background: #f0f4ff;
-            border-color: #5B7FFF;
+            background: rgba(42, 82, 152, 0.1);
+            border-color: rgba(42, 82, 152, 0.3);
         }
 
         .attachment-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .attachment-icon {
-            font-size: 20px;
+            font-size: 22px;
         }
 
         .attachment-name {
             font-size: 14px;
-            color: #333;
+            color: white;
         }
 
         .attachment-size {
             font-size: 12px;
-            color: #999;
+            color: rgba(255, 255, 255, 0.6);
         }
 
         .btn-download {
-            padding: 6px 15px;
-            background: #5B7FFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            padding: 8px 20px;
+            background: rgba(42, 82, 152, 0.2);
+            color: #7dd3fc;
+            border: 1px solid rgba(42, 82, 152, 0.3);
+            border-radius: 8px;
             cursor: pointer;
             font-size: 13px;
+            font-weight: 600;
             text-decoration: none;
             transition: all 0.3s;
         }
 
         .btn-download:hover {
-            background: #4a6fe8;
+            background: rgba(42, 82, 152, 0.3);
+            transform: translateY(-2px);
         }
 
+        /* 버튼 그룹 */
         .btn-group {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
-            margin-top: 30px;
+            margin-top: 40px;
         }
 
         .btn {
-            padding: 12px 30px;
+            padding: 12px 35px;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             transition: all 0.3s;
             text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .btn-list {
-            background: #6c757d;
+            background: rgba(108, 117, 125, 0.3);
             color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .btn-list:hover {
-            background: #5a6268;
+            background: rgba(108, 117, 125, 0.5);
+            transform: translateY(-2px);
         }
 
         .btn-edit {
-            background: #5B7FFF;
-            color: white;
+            background: rgba(42, 82, 152, 0.2);
+            color: #7dd3fc;
+            border: 1px solid rgba(42, 82, 152, 0.3);
         }
 
         .btn-edit:hover {
-            background: #4a6fe8;
+            background: rgba(42, 82, 152, 0.3);
+            transform: translateY(-2px);
         }
 
         .btn-delete {
-            background: #ff5757;
-            color: white;
+            background: rgba(255, 87, 87, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(255, 87, 87, 0.3);
         }
 
         .btn-delete:hover {
-            background: #ff3333;
+            background: rgba(255, 87, 87, 0.3);
+            transform: translateY(-2px);
         }
 
+        /* 모달 */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 2000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
         }
 
         .modal-content {
-            background-color: white;
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(20px);
             margin: 15% auto;
-            padding: 30px;
-            border-radius: 10px;
-            width: 400px;
+            padding: 40px;
+            border-radius: 20px;
+            width: 450px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .modal-content p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
         }
 
         .modal-buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 30px;
+        }
+
+        /* 스크롤바 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(42, 82, 152, 0.5);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(42, 82, 152, 0.7);
         }
     </style>
 </head>
 <body>
-<div class="top-bar">
-    <a href="/" class="logo">🏙️ 안양시 스마트도시 통합센터</a>
-    <div class="top-menu">
-        <a href="/">조회</a>
-        <a href="/notice/list">시민 서비스 조회/관리</a>
-        <a href="/award/list">운영 관리</a>
-        <a href="#">시설물 신고 관리</a>
-        <a href="/user/list">환경설정</a>
-        <a href="#" class="logout-btn">로그아웃</a>
+    <!-- IT 애니메이션 배경 -->
+    <div class="bg-decoration">
+        <div class="grid-background"></div>
+        <div class="bg-circle bg-circle1"></div>
+        <div class="bg-circle bg-circle2"></div>
     </div>
-</div>
 
-<div class="sidebar">
-    <div class="sidebar-title">시민 서비스 조회/관리</div>
-    <ul class="sidebar-menu">
-        <li><a href="/notice/list">공지사항</a></li>
-        <li><a href="/press/list">보도자료</a></li>
-        <li><a href="/visit/list">방문사진</a></li>
-        <li><a href="/video/list" class="active">홍보영상</a></li>
-    </ul>
-</div>
-
-<div class="main-content">
-    <div class="content-box">
-        <h1 class="page-title">🎬 홍보영상 상세</h1>
-
-        <div class="detail-header">
-            <div style="margin-bottom: 10px;">
-                <span th:if="${video.status == '게시 중'}" class="status-badge status-active">게시 중</span>
-                <span th:if="${video.status == '예약'}" class="status-badge status-reserved">예약</span>
-                <span th:if="${video.status == '게시 종료'}" class="status-badge status-ended">게시 종료</span>
-            </div>
-
-            <h2 class="detail-title" th:text="${video.title}">홍보영상 제목</h2>
-
-            <div class="detail-meta">
-                <div class="meta-item">
-                    <span>👤</span>
-                    <span th:text="${video.author != null ? video.author : '관리자'}">작성자</span>
-                </div>
-                <div class="meta-item">
-                    <span>📅</span>
-                    <span th:text="${#temporals.format(video.createdAt, 'yyyy.MM.dd HH:mm')}">작성일</span>
-                </div>
-                <div class="meta-item">
-                    <span>👁️</span>
-                    <span th:text="${video.viewCount}">0</span>
-                </div>
-                <div class="meta-item" th:if="${video.startDate != null}">
-                    <span>⏰</span>
-                    <span th:text="'게시: ' + ${#temporals.format(video.startDate, 'yyyy.MM.dd')} + ' ~ ' + ${#temporals.format(video.endDate, 'yyyy.MM.dd')}">게시기간</span>
-                </div>
-            </div>
+    <!-- 상단바 -->
+    <div class="top-bar">
+        <a href="/" class="logo">
+            <span class="logo-icon">🏙️</span>
+            <span>안양시 스마트도시 통합센터</span>
+        </a>
+        <div class="top-menu">
+            <a href="/">조회</a>
+            <a href="/notice/list">시민 서비스 조회/관리</a>
+            <a href="/award/list">운영 관리</a>
+            <a href="#">시설물 신고 관리</a>
+            <a href="/user/list">환경설정</a>
+            <a href="#" class="logout-btn">로그아웃</a>
         </div>
+    </div>
 
-        <div class="detail-content" th:text="${video.content}">
-            홍보영상 내용이 여기에 표시됩니다.
-        </div>
+    <!-- 사이드바 -->
+    <div class="sidebar">
+        <div class="sidebar-title">시민 서비스 조회/관리</div>
+        <ul class="sidebar-menu">
+            <li><a href="/notice/list">📢 공지사항</a></li>
+            <li><a href="/press/list">📰 보도자료</a></li>
+            <li><a href="/visit/list">📷 방문사진</a></li>
+            <li><a href="/video/list" class="active">🎥 홍보영상</a></li>
+        </ul>
+    </div>
 
-        <div class="attachment-section" th:if="${attachments != null && !attachments.isEmpty()}">
-            <h3 class="attachment-title">📎 첨부파일 (<span th:text="${#lists.size(attachments)}">0</span>)</h3>
-            <ul class="attachment-list">
-                <li class="attachment-item" th:each="attachment : ${attachments}">
-                    <div class="attachment-info">
-                        <span class="attachment-icon">📄</span>
-                        <div>
-                            <div class="attachment-name" th:text="${attachment.fileName}">파일명</div>
-                            <div class="attachment-size" th:text="${#numbers.formatDecimal(attachment.fileSize / 1024.0, 1, 2)} + ' KB'">파일크기</div>
-                        </div>
+    <!-- 메인 컨텐츠 -->
+    <div class="main-content">
+        <div class="content-box">
+            <h1 class="page-title">🎬 홍보영상 상세</h1>
+
+            <div class="detail-header">
+                <div style="margin-bottom: 15px;">
+                    <span th:if="${video.status == '게시 중'}" class="status-badge status-active">게시 중</span>
+                    <span th:if="${video.status == '예약'}" class="status-badge status-reserved">예약</span>
+                    <span th:if="${video.status == '게시 종료'}" class="status-badge status-ended">게시 종료</span>
+                </div>
+
+                <h2 class="detail-title" th:text="${video.title}">홍보영상 제목</h2>
+
+                <div class="detail-meta">
+                    <div class="meta-item">
+                        <span>👤</span>
+                        <span th:text="${video.author != null ? video.author : '관리자'}">작성자</span>
                     </div>
-                    <a th:href="@{/video/download/{id}(id=${attachment.id})}"
-                       class="btn-download"
-                       download>다운로드</a>
-                </li>
-            </ul>
-        </div>
+                    <div class="meta-item">
+                        <span>📅</span>
+                        <span th:text="${#temporals.format(video.createdAt, 'yyyy.MM.dd HH:mm')}">작성일</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>👁️</span>
+                        <span th:text="${video.viewCount}">0</span>
+                    </div>
+                    <div class="meta-item" th:if="${video.startDate != null}">
+                        <span>⏰</span>
+                        <span th:text="'게시: ' + ${#temporals.format(video.startDate, 'yyyy.MM.dd')} + ' ~ ' + ${#temporals.format(video.endDate, 'yyyy.MM.dd')}">게시기간</span>
+                    </div>
+                </div>
+            </div>
 
-        <div class="btn-group">
-            <a href="/video/list" class="btn btn-list">목록으로</a>
-            <a th:href="@{/video/edit/{id}(id=${video.id})}" class="btn btn-edit">수정하기</a>
-            <button type="button" class="btn btn-delete" th:onclick="'deleteVideo(' + ${video.id} + ')'">삭제하기</button>
+            <div class="detail-content" th:text="${video.content}">
+                홍보영상 내용이 여기에 표시됩니다.
+            </div>
+
+            <div class="attachment-section" th:if="${attachments != null && !attachments.isEmpty()}">
+                <h3 class="attachment-title">📎 첨부파일 (<span th:text="${#lists.size(attachments)}">0</span>)</h3>
+                <ul class="attachment-list">
+                    <li class="attachment-item" th:each="attachment : ${attachments}">
+                        <div class="attachment-info">
+                            <span class="attachment-icon">📄</span>
+                            <div>
+                                <div class="attachment-name" th:text="${attachment.fileName}">파일명</div>
+                                <div class="attachment-size" th:text="${#numbers.formatDecimal(attachment.fileSize / 1024.0, 1, 2)} + ' KB'">파일크기</div>
+                            </div>
+                        </div>
+                        <a th:href="@{/video/download/{id}(id=${attachment.id})}"
+                           class="btn-download"
+                           download>다운로드</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+                <a href="/video/list" class="btn btn-list">목록으로</a>
+                <a th:href="@{/video/edit/{id}(id=${video.id})}" class="btn btn-edit">수정하기</a>
+                <button type="button" class="btn btn-delete" th:onclick="'deleteVideo(' + ${video.id} + ')'">삭제하기</button>
+            </div>
         </div>
     </div>
-</div>
 
-<div id="deleteModal" class="modal">
-    <div class="modal-content">
-        <h3>게시글 삭제</h3>
-        <p style="margin: 20px 0;">게시글을 정말 삭제하시겠습니까?<br>삭제된 목록은 복구할 수 없습니다.</p>
-        <div class="modal-buttons">
-            <button class="btn btn-list" onclick="closeDeleteModal()">취소</button>
-            <button class="btn btn-delete" onclick="confirmDelete()">확인</button>
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h3>게시글 삭제</h3>
+            <p>게시글을 정말 삭제하시겠습니까?<br>삭제된 목록은 복구할 수 없습니다.</p>
+            <div class="modal-buttons">
+                <button class="btn btn-list" onclick="closeDeleteModal()">취소</button>
+                <button class="btn btn-delete" onclick="confirmDelete()">확인</button>
+            </div>
         </div>
     </div>
-</div>
 
-<script th:inline="javascript">
-    let deleteId = null;
+    <script th:inline="javascript">
+        let deleteId = null;
 
-    function deleteVideo(id) {
-        deleteId = id;
-        document.getElementById('deleteModal').style.display = 'block';
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('deleteModal').style.display = 'none';
-        deleteId = null;
-    }
-
-    function confirmDelete() {
-        if (deleteId) {
-            fetch(`/video/api/delete/${deleteId}`, {
-                method: 'DELETE'
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert(data);
-                location.href = '/video/list';
-            })
-            .catch(error => {
-                alert('삭제 중 오류가 발생했습니다.');
-                console.error('Error:', error);
-            });
+        function deleteVideo(id) {
+            deleteId = id;
+            document.getElementById('deleteModal').style.display = 'block';
         }
-    }
 
-    window.onclick = function(event) {
-        const modal = document.getElementById('deleteModal');
-        if (event.target === modal) {
-            closeDeleteModal();
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            deleteId = null;
         }
-    }
-</script>
+
+        function confirmDelete() {
+            if (deleteId) {
+                fetch(`/video/api/delete/${deleteId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data);
+                    location.href = '/video/list';
+                })
+                .catch(error => {
+                    alert('삭제 중 오류가 발생했습니다.');
+                    console.error('Error:', error);
+                });
+            }
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('deleteModal');
+            if (event.target === modal) {
+                closeDeleteModal();
+            }
+        }
+    </script>
 </body>
 </html>
