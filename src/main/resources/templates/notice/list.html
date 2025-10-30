@@ -4,75 +4,176 @@
     <meta charset="UTF-8">
     <title>공지사항 - 안양 스마트도시 통합센터</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* IT 애니메이션 배경 */
+        .bg-decoration {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+        }
+
+        /* 격자 패턴 */
+        .grid-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(42, 82, 152, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(42, 82, 152, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* 빛나는 원형 */
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .bg-circle1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(30, 60, 114, 0.4) 0%, transparent 70%);
+            top: -100px;
+            right: 10%;
+            animation-delay: 0s;
+        }
+
+        .bg-circle2 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(42, 82, 152, 0.3) 0%, transparent 70%);
+            bottom: 10%;
+            left: 10%;
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
 
         /* 상단바 */
         .top-bar {
-            background: white;
-            height: 60px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            height: 70px;
+            box-shadow: 0 4px 20px rgba(30, 60, 114, 0.3);
             display: flex;
             align-items: center;
-            padding: 0 30px;
-            position: fixed;
+            padding: 0 40px;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
         .logo {
             font-size: 20px;
-            font-weight: bold;
-            color: #5B7FFF;
+            font-weight: 700;
+            color: white;
             text-decoration: none;
-            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             transition: all 0.3s;
         }
 
         .logo:hover {
             transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 10px;
         }
 
         .top-menu {
             margin-left: auto;
             display: flex;
-            gap: 30px;
+            gap: 10px;
+            align-items: center;
         }
 
         .top-menu a {
             text-decoration: none;
-            color: #666;
-            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .top-menu a:hover {
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .logout-btn {
-            padding: 8px 20px;
-            background: #ff5757;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
+            padding: 10px 25px !important;
+            background: rgba(255, 87, 87, 0.2) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 87, 87, 0.3) !important;
+            border-radius: 10px !important;
+            margin-left: 10px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 87, 87, 0.3) !important;
         }
 
         /* 사이드바 */
         .sidebar {
-            width: 200px;
-            background: white;
+            width: 250px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             position: fixed;
             left: 0;
-            top: 60px;
+            top: 70px;
             bottom: 0;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-            padding: 20px 0;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+            padding: 30px 0;
             overflow-y: auto;
+            z-index: 100;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar-title {
-            padding: 0 20px 15px 20px;
-            font-size: 14px;
-            color: #999;
+            padding: 0 25px 20px 25px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .sidebar-menu {
@@ -80,60 +181,77 @@
         }
 
         .sidebar-menu li a {
-            display: block;
-            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 25px;
             text-decoration: none;
-            color: #333;
+            color: rgba(255, 255, 255, 0.8);
             transition: all 0.3s;
+            font-weight: 500;
+            border-left: 3px solid transparent;
         }
 
         .sidebar-menu li a:hover {
-            background: #f0f4ff;
-            color: #5B7FFF;
-            border-right: 3px solid #5B7FFF;
+            background: rgba(42, 82, 152, 0.2);
+            color: white;
+            border-left-color: #2a5298;
+            padding-left: 30px;
         }
 
         .sidebar-menu li a.active {
-            background: #5B7FFF;
+            background: linear-gradient(90deg, rgba(42, 82, 152, 0.3), transparent);
             color: white;
+            border-left-color: #2a5298;
+            font-weight: 600;
         }
 
         /* 메인 컨텐츠 */
         .main-content {
-            margin-left: 200px;
-            margin-top: 60px;
-            padding: 30px;
-            min-height: calc(100vh - 60px);
+            margin-left: 250px;
+            margin-top: 70px;
+            padding: 40px;
+            min-height: calc(100vh - 70px);
+            position: relative;
+            z-index: 1;
         }
 
         .content-box {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .page-title {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #5B7FFF;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(42, 82, 152, 0.5);
+            text-shadow: 0 0 20px rgba(42, 82, 152, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         /* 검색 영역 */
         .search-area {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 8px;
-            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .search-row {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .search-row:last-child {
@@ -141,83 +259,115 @@
         }
 
         .search-label {
-            min-width: 80px;
+            min-width: 100px;
             font-weight: 600;
-            color: #333;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
         }
 
         .search-area select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
             font-size: 14px;
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .search-area select:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
+        }
+
+        .search-area select option {
+            background: #1a1f3a;
+            color: white;
+        }
+
+        .search-area input[type="text"],
+        .search-area input[type="date"] {
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
         }
 
         .search-area input[type="text"] {
             flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
         }
 
-        .search-area input[type="date"] {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            background: white;
+        .search-area input[type="text"]:focus,
+        .search-area input[type="date"]:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
+        }
+
+        .search-area input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .btn-search {
-            padding: 10px 30px;
-            background: #5B7FFF;
+            padding: 12px 35px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(42, 82, 152, 0.3);
         }
 
         .btn-search:hover {
-            background: #4a6fe8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(42, 82, 152, 0.5);
         }
 
         .btn-reset {
-            padding: 10px 20px;
-            background: #6c757d;
+            padding: 12px 25px;
+            background: rgba(108, 117, 125, 0.3);
             color: white;
-            border: none;
-            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
+            transition: all 0.3s;
         }
 
         .btn-reset:hover {
-            background: #5a6268;
+            background: rgba(108, 117, 125, 0.5);
+            transform: translateY(-2px);
         }
 
         /* 필터 태그 */
         .filter-tags {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .filter-tag {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 6px 12px;
-            background: #e7f3ff;
-            border: 1px solid #5B7FFF;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(42, 82, 152, 0.2);
+            border: 1px solid rgba(42, 82, 152, 0.4);
             border-radius: 20px;
             font-size: 13px;
-            color: #333;
+            color: white;
+            backdrop-filter: blur(10px);
         }
 
         .filter-tag .remove {
@@ -225,22 +375,44 @@
             color: #ff5757;
             font-weight: bold;
             margin-left: 5px;
+            transition: all 0.3s;
+        }
+
+        .filter-tag .remove:hover {
+            transform: scale(1.2);
         }
 
         /* 글쓰기 버튼 */
         .btn-write {
             float: right;
-            padding: 10px 25px;
-            background: #5B7FFF;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 10px;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(42, 82, 152, 0.3);
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-write:hover {
-            background: #4a6fe8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(42, 82, 152, 0.5);
+        }
+
+        .total-count {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .total-count strong {
+            color: #2a5298;
+            font-size: 16px;
         }
 
         /* 테이블 */
@@ -251,21 +423,25 @@
         }
 
         .notice-table thead {
-            background: #f8f9fa;
+            background: rgba(42, 82, 152, 0.2);
+            backdrop-filter: blur(10px);
         }
 
         .notice-table th {
-            padding: 15px;
+            padding: 18px 15px;
             text-align: center;
-            color: #666;
+            color: white;
             font-weight: 600;
-            border-bottom: 2px solid #e9ecef;
+            border-bottom: 2px solid rgba(42, 82, 152, 0.5);
+            font-size: 14px;
         }
 
         .notice-table td {
-            padding: 15px;
+            padding: 18px 15px;
             text-align: center;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
         }
 
         .notice-table td.title {
@@ -273,110 +449,178 @@
         }
 
         .notice-table td.title a {
-            color: #333;
+            color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
+            transition: all 0.3s;
         }
 
         .notice-table td.title a:hover {
-            color: #5B7FFF;
+            color: #2a5298;
+            text-shadow: 0 0 10px rgba(42, 82, 152, 0.5);
         }
 
         .notice-table tr.pinned {
-            background: #fffacd;
+            background: rgba(255, 250, 205, 0.1);
         }
 
         .notice-table tr.pinned .badge {
-            background: #666;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            padding: 3px 8px;
-            border-radius: 3px;
+            padding: 4px 10px;
+            border-radius: 5px;
             font-size: 12px;
+            font-weight: 600;
             margin-right: 5px;
         }
 
-        .notice-table tr:hover {
-            background: #f8f9fa;
+        .notice-table tbody tr {
+            transition: all 0.3s;
+        }
+
+        .notice-table tbody tr:hover {
+            background: rgba(42, 82, 152, 0.1);
         }
 
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
-            color: #999;
+            padding: 80px 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 16px;
         }
 
         .status-badge {
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 6px 12px;
+            border-radius: 15px;
             font-size: 12px;
             font-weight: 600;
+            display: inline-block;
         }
 
         .status-active {
-            background: #d4edda;
-            color: #155724;
+            background: rgba(40, 167, 69, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(40, 167, 69, 0.3);
         }
 
         .status-reserved {
-            background: #fff3cd;
-            color: #856404;
+            background: rgba(255, 193, 7, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(255, 193, 7, 0.3);
         }
 
         .status-ended {
-            background: #f8d7da;
-            color: #721c24;
+            background: rgba(220, 53, 69, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(220, 53, 69, 0.3);
         }
 
         /* 버튼 스타일 */
         .btn {
-            padding: 6px 12px;
+            padding: 8px 15px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s;
-            margin: 0 2px;
+            margin: 0 3px;
         }
 
         .btn-view {
-            background: #2196F3;
-            color: white;
+            background: rgba(33, 150, 243, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(33, 150, 243, 0.3);
         }
 
         .btn-view:hover {
-            background: #1976D2;
+            background: rgba(33, 150, 243, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
         }
 
         .btn-edit {
-            background: #5B7FFF;
-            color: white;
+            background: rgba(42, 82, 152, 0.2);
+            color: #7dd3fc;
+            border: 1px solid rgba(42, 82, 152, 0.3);
         }
 
         .btn-edit:hover {
-            background: #4a6fe8;
+            background: rgba(42, 82, 152, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(42, 82, 152, 0.3);
         }
 
         .btn-delete {
-            background: #ff5757;
-            color: white;
+            background: rgba(255, 87, 87, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(255, 87, 87, 0.3);
         }
 
         .btn-delete:hover {
-            background: #ff3333;
+            background: rgba(255, 87, 87, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 87, 87, 0.3);
+        }
+
+        /* 반응형 */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 200px;
+            }
+            .main-content {
+                margin-left: 200px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        /* 스크롤바 스타일 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(42, 82, 152, 0.5);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(42, 82, 152, 0.7);
         }
     </style>
 </head>
 <body>
+<!-- IT 애니메이션 배경 -->
+<div class="bg-decoration">
+    <div class="grid-background"></div>
+    <div class="bg-circle bg-circle1"></div>
+    <div class="bg-circle bg-circle2"></div>
+</div>
+
 <!-- 상단바 -->
 <div class="top-bar">
-    <a href="/" class="logo">🏙️ 안양시 스마트도시 통합센터</a>
+    <a href="/" class="logo">
+        <span class="logo-icon">🏙️</span>
+        <span>안양시 스마트도시 통합센터</span>
+    </a>
     <div class="top-menu">
-        <a href="/">조회</a>
+        <a href="/dashboard">조회</a>
         <a href="/notice/list">시민 서비스 조회/관리</a>
         <a href="/award/list">운영 관리</a>
         <a href="#">시설물 신고 관리</a>
         <a href="/user/list">환경설정</a>
-        <a href="#" class="logout-btn">로그아웃</a>
+        <a href="/" class="logout-btn">로그아웃</a>
     </div>
 </div>
 
@@ -384,10 +628,10 @@
 <div class="sidebar">
     <div class="sidebar-title">시민 서비스 조회/관리</div>
     <ul class="sidebar-menu">
-        <li><a href="/notice/list" class="active">공지사항</a></li>
-        <li><a href="/press/list">보도자료</a></li>
-        <li><a href="/visit/list">방문사진</a></li>
-        <li><a href="/video/list">홍보영상</a></li>
+        <li><a href="/notice/list" class="active">📢 공지사항</a></li>
+        <li><a href="/press/list">📰 보도자료</a></li>
+        <li><a href="/visit/list">📷 방문사진</a></li>
+        <li><a href="/video/list">🎥 홍보영상</a></li>
     </ul>
 </div>
 
@@ -412,8 +656,7 @@
                            name="keyword"
                            id="keyword"
                            th:value="${keyword}"
-                           placeholder="검색어를 입력하세요"
-                           style="flex: 1;">
+                           placeholder="검색어를 입력하세요">
                 </div>
 
                 <!-- 두 번째 줄: 분류 + 상태 -->
@@ -446,7 +689,7 @@
                            id="startDate"
                            th:value="${startDate}"
                            style="width: 180px;">
-                    <span style="margin: 0 10px;">~</span>
+                    <span style="margin: 0 10px; color: rgba(255,255,255,0.6);">~</span>
                     <input type="date"
                            name="endDate"
                            id="endDate"
@@ -465,7 +708,7 @@
         <a href="/notice/write" class="btn-write">✏️ 글쓰기</a>
         <div style="clear: both;"></div>
 
-        <p>총 <strong th:text="${#lists.size(notices)}">0</strong>건</p>
+        <p class="total-count">총 <strong th:text="${#lists.size(notices)}">0</strong>건</p>
 
         <!-- 공지사항 테이블 -->
         <table class="notice-table">
@@ -525,90 +768,90 @@
 </div>
 
 <script th:inline="javascript">
-    // 페이지 로드 시 필터 태그 표시
-    window.onload = function() {
-        displayFilterTags();
-    };
+        // 페이지 로드 시 필터 태그 표시
+        window.onload = function() {
+            displayFilterTags();
+        };
 
-    function displayFilterTags() {
-        const filterTagsDiv = document.getElementById('filterTags');
-        filterTagsDiv.innerHTML = '';
+        function displayFilterTags() {
+            const filterTagsDiv = document.getElementById('filterTags');
+            filterTagsDiv.innerHTML = '';
 
-        const keyword = /*[[${keyword}]]*/ '';
-        const searchType = /*[[${searchType}]]*/ '전체';
-        const category = /*[[${category}]]*/ '전체';
-        const status = /*[[${status}]]*/ '전체';
-        const startDate = /*[[${startDate}]]*/ '';
-        const endDate = /*[[${endDate}]]*/ '';
+            const keyword = /*[[${keyword}]]*/ '';
+            const searchType = /*[[${searchType}]]*/ '전체';
+            const category = /*[[${category}]]*/ '전체';
+            const status = /*[[${status}]]*/ '전체';
+            const startDate = /*[[${startDate}]]*/ '';
+            const endDate = /*[[${endDate}]]*/ '';
 
-        if (keyword && keyword.trim() !== '') {
-            addFilterTag(filterTagsDiv, `검색: ${keyword} (${searchType})`, 'keyword');
+            if (keyword && keyword.trim() !== '') {
+                addFilterTag(filterTagsDiv, `검색: ${keyword} (${searchType})`, 'keyword');
+            }
+
+            if (category && category !== '전체') {
+                addFilterTag(filterTagsDiv, `분류: ${category}`, 'category');
+            }
+
+            if (status && status !== '전체') {
+                addFilterTag(filterTagsDiv, `상태: ${status}`, 'status');
+            }
+
+            if (startDate || endDate) {
+                const dateText = `날짜: ${startDate || '시작일'} ~ ${endDate || '종료일'}`;
+                addFilterTag(filterTagsDiv, dateText, 'date');
+            }
         }
 
-        if (category && category !== '전체') {
-            addFilterTag(filterTagsDiv, `분류: ${category}`, 'category');
+        function addFilterTag(container, text, type) {
+            const tag = document.createElement('div');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `
+                ${text}
+                <span class="remove" onclick="removeFilter('${type}')">✕</span>
+            `;
+            container.appendChild(tag);
         }
 
-        if (status && status !== '전체') {
-            addFilterTag(filterTagsDiv, `상태: ${status}`, 'status');
+        function removeFilter(type) {
+            if (type === 'keyword') {
+                document.getElementById('keyword').value = '';
+            } else if (type === 'category') {
+                document.getElementById('category').value = '전체';
+            } else if (type === 'status') {
+                document.getElementById('status').value = '전체';
+            } else if (type === 'date') {
+                document.getElementById('startDate').value = '';
+                document.getElementById('endDate').value = '';
+            }
+            document.getElementById('searchForm').submit();
         }
 
-        if (startDate || endDate) {
-            const dateText = `날짜: ${startDate || '시작일'} ~ ${endDate || '종료일'}`;
-            addFilterTag(filterTagsDiv, dateText, 'date');
-        }
-    }
-
-    function addFilterTag(container, text, type) {
-        const tag = document.createElement('div');
-        tag.className = 'filter-tag';
-        tag.innerHTML = `
-            ${text}
-            <span class="remove" onclick="removeFilter('${type}')">✕</span>
-        `;
-        container.appendChild(tag);
-    }
-
-    function removeFilter(type) {
-        if (type === 'keyword') {
+        function resetSearch() {
+            document.getElementById('searchType').selectedIndex = 0;
             document.getElementById('keyword').value = '';
-        } else if (type === 'category') {
-            document.getElementById('category').value = '전체';
-        } else if (type === 'status') {
-            document.getElementById('status').value = '전체';
-        } else if (type === 'date') {
+            document.getElementById('category').selectedIndex = 0;
+            document.getElementById('status').selectedIndex = 0;
             document.getElementById('startDate').value = '';
             document.getElementById('endDate').value = '';
+            document.getElementById('searchForm').submit();
         }
-        document.getElementById('searchForm').submit();
-    }
 
-    function resetSearch() {
-        document.getElementById('searchType').selectedIndex = 0;
-        document.getElementById('keyword').value = '';
-        document.getElementById('category').selectedIndex = 0;
-        document.getElementById('status').selectedIndex = 0;
-        document.getElementById('startDate').value = '';
-        document.getElementById('endDate').value = '';
-        document.getElementById('searchForm').submit();
-    }
-
-    function deleteNotice(id) {
-        if (confirm('정말 삭제하시겠습니까? 삭제된 목록은 복구할 수 없습니다.')) {
-            fetch(`/notice/api/delete/${id}`, {
-                method: 'DELETE'
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert(data);
-                location.reload();
-            })
-            .catch(error => {
-                alert('삭제 중 오류가 발생했습니다.');
-                console.error('Error:', error);
-            });
+        function deleteNotice(id) {
+            if (confirm('정말 삭제하시겠습니까? 삭제된 목록은 복구할 수 없습니다.')) {
+                fetch(`/notice/api/delete/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.text())
+                .then(data => {
+                    alert(data);
+                    location.reload();
+                })
+                .catch(error => {
+                    alert('삭제 중 오류가 발생했습니다.');
+                    console.error('Error:', error);
+                });
+            }
         }
-    }
-</script>
+    </script>
 </body>
 </html>
