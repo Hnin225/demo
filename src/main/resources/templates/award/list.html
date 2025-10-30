@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연도별 수상 이력 - 안양 스마트도시 통합센터</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f5f7fa;
+        }
+
+        /* 상단바 */
+        .top-bar {
+            background: white;
+            height: 60px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #5B7FFF;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .top-menu {
+            margin-left: auto;
+            display: flex;
+            gap: 30px;
+        }
+
+        .top-menu a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: #ff5757;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        /* 사이드바 */
+        .sidebar {
+            width: 200px;
+            background: white;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            padding: 0 20px 15px 20px;
+            font-size: 14px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu li a:hover {
+            background: #f0f4ff;
+            color: #5B7FFF;
+            border-right: 3px solid #5B7FFF;
+        }
+
+        .sidebar-menu li a.active {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        /* 메인 컨텐츠 */
+        .main-content {
+            margin-left: 200px;
+            margin-top: 60px;
+            padding: 30px;
+            min-height: calc(100vh - 60px);
+        }
+
+        .content-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #5B7FFF;
+        }
+
+        /* 버튼 */
+        .btn-write {
+            float: right;
+            padding: 10px 25px;
+            background: #5B7FFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-write:hover {
+            background: #4a6fe8;
+        }
+
+        /* 테이블 */
+        .award-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .award-table thead {
+            background: #f8f9fa;
+        }
+
+        .award-table th {
+            padding: 15px;
+            text-align: center;
+            color: #666;
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .award-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .award-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .award-table tr.hidden {
+            opacity: 0.5;
+            background: #f0f0f0;
+        }
+
+        .status-visible {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .status-hidden {
+            color: #999;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin: 0 2px;
+        }
+
+        .btn-view {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #1976D2;
+        }
+
+        .btn-toggle {
+            background: #FF9800;
+            color: white;
+        }
+
+        .btn-toggle:hover {
+            background: #F57C00;
+        }
+
+        .btn-edit {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #4a6fe8;
+        }
+
+        .btn-delete {
+            background: #ff5757;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #ff3333;
+        }
+
+        /* 이미지 모달 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+        }
+
+        .modal-content {
+            position: relative;
+            margin: auto;
+            padding: 0;
+            width: 90%;
+            max-width: 1200px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: auto;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            margin-top: -50px;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+        }
+
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<!-- 상단바 -->
+<div class="top-bar">
+    <a href="/dashboard" class="logo">🏙️ 안양시 스마트도시 통합센터</a>
+    <div class="top-menu">
+        <a href="/dashboard">조회</a>
+        <a href="/notice/list">시민 서비스 조회/관리</a>
+        <a href="/award/list">운영 관리</a>
+        <a href="#">시설물 신고 관리</a>
+        <a href="/user/list">환경설정</a>
+        <a href="/" class="logout-btn">로그아웃</a>
+    </div>
+</div>
+
+<!-- 사이드바 -->
+<div class="sidebar">
+    <div class="sidebar-title">시민 서비스 조회/관리</div>
+    <ul class="sidebar-menu">
+        <li><a href="/notice/list">공지사항</a></li>
+        <li><a href="/press/list">보도자료</a></li>
+        <li><a href="/visit/list">방문사진</a></li>
+        <li><a href="/video/list">홍보영상</a></li>
+    </ul>
+
+    <div class="sidebar-title" style="margin-top: 20px;">운영 관리</div>
+    <ul class="sidebar-menu">
+        <li><a href="/stats/list">운영 실적 통계</a></li>
+        <li><a href="/award/list" class="active">연도별 수상 이력</a></li>
+        <li><a href="/country/list">방문 국가 관리</a></li>
+        <li><a href="/schedule/list">방문 사전 관리</a></li>
+        <li><a href="/org/list">조직도 관리</a></li>
+    </ul>
+</div>
+
+<!-- 메인 컨텐츠 -->
+<div class="main-content">
+    <div class="content-box">
+        <h1 class="page-title">🏆 연도별 수상 이력</h1>
+
+        <button class="btn-write" onclick="location.href='/award/write'">
+            ✏️ 수상 이력 추가
+        </button>
+        <div style="clear: both;"></div>
+
+        <p>총 <strong th:text="${#lists.size(awards)}">0</strong>건</p>
+
+        <!-- 수상 이력 테이블 -->
+        <!-- 수상 이력 테이블 -->
+        <table class="award-table">
+            <thead>
+            <tr>
+                <th style="width: 80px;">No.</th>
+                <th style="width: 120px;">연도</th>
+                <th>제목</th>
+                <th style="width: 180px;">게시 일자</th>
+                <th style="width: 120px;">작성자</th>
+                <th style="width: 100px;">상태</th>
+                <th style="width: 250px;">기능</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${awards == null or awards.isEmpty()}">
+                <td colspan="7" class="empty-state">등록된 수상 이력이 없습니다.</td>
+            </tr>
+            <tr th:each="award, stat : ${awards}"
+                th:class="${award.isVisible} ? '' : 'hidden'">
+                <td th:text="${stat.count}"></td>
+                <td th:text="${award.year} + '년'"></td>
+                <td th:text="${award.title}"></td>
+                <td th:text="${award.createdAt != null ? #temporals.format(award.createdAt, 'yyyy.MM.dd HH:mm') : '-'}"></td>
+                <td th:text="${award.author != null ? award.author : '관리자'}"></td>
+                <td>
+                    <span th:if="${award.isVisible}" class="status-visible">게시 중</span>
+                    <span th:unless="${award.isVisible}" class="status-hidden">숨김</span>
+                </td>
+                <td>
+                    <!-- 이미지 보기 버튼 -->
+                    <button class="btn btn-view"
+                            th:if="${award.imageFilePath != null}"
+                            th:attr="onclick='openModal(\'' + ${award.imageFilePath} + '\')'">
+                        이미지 보기
+                    </button>
+
+                    <!-- 게시/숨김 토글 버튼 -->
+                    <button class="btn btn-toggle"
+                            th:attr="onclick='toggleVisibility(' + ${award.id} + ')'">
+                        <span th:text="${award.isVisible} ? '숨김' : '게시'"></span>
+                    </button>
+
+                    <!-- 수정 버튼 -->
+                    <button class="btn btn-edit"
+                            th:attr="onclick='location.href=\'/award/edit/' + ${award.id} + '\''">
+                        수정
+                    </button>
+
+                    <!-- 삭제 버튼 -->
+                    <button class="btn btn-delete"
+                            th:attr="onclick='deleteAward(' + ${award.id} + ')'">
+                        삭제
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 이미지 모달 -->
+<div id="imageModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div class="modal-content">
+        <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+        <img id="modalImage" class="modal-image" src="" alt="Award Image">
+        <a class="next" onclick="changeImage(1)">&#10095;</a>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    let currentImages = [];
+    let currentIndex = 0;
+    let modalOpen = false;  // 모달이 열려있는지 추적
+
+    // 페이지 로드 시 이미지 목록 수집
+    window.onload = function() {
+        const awards = /*[[${awards}]]*/ [];
+        currentImages = awards
+            .filter(award => award.imageFilePath && award.imageFilePath.trim() !== '')
+            .map(award => {
+                const path = award.imageFilePath;
+                const filename = path.substring(path.lastIndexOf('/') + 1);
+                return '/award/image/' + filename;
+            });
+
+        console.log('Available images:', currentImages);
+    };
+
+    function openModal(imagePath) {
+        if (!imagePath || imagePath.trim() === '') {
+            alert('이미지가 등록되지 않았습니다.');
+            return;
+        }
+
+        modalOpen = true;  // 모달 열림 상태로 설정
+
+        const filename = imagePath.substring(imagePath.lastIndexOf('/') + 1);
+        const imageUrl = '/award/image/' + filename;
+
+        console.log('Opening image:', imageUrl);
+
+        const modal = document.getElementById('imageModal');
+        const img = document.getElementById('modalImage');
+
+        modal.style.display = 'block';
+        img.src = imageUrl;
+
+        currentIndex = currentImages.findIndex(img => img.includes(filename));
+        console.log('Current index:', currentIndex);
+    }
+
+    function closeModal() {
+        modalOpen = false;  // 모달 닫힘 상태로 설정
+        document.getElementById('imageModal').style.display = 'none';
+        document.getElementById('modalImage').src = '';  // 이미지 src 초기화
+    }
+
+    function changeImage(direction) {
+        if (currentImages.length === 0) {
+            alert('이미지가 없습니다.');
+            return;
+        }
+
+        currentIndex += direction;
+        if (currentIndex < 0) {
+            currentIndex = currentImages.length - 1;
+        } else if (currentIndex >= currentImages.length) {
+            currentIndex = 0;
+        }
+
+        console.log('Changing to image:', currentImages[currentIndex]);
+        document.getElementById('modalImage').src = currentImages[currentIndex];
+    }
+
+    // 이미지 로드 에러 처리 - 모달이 열려있을 때만 처리
+    document.getElementById('modalImage').onerror = function() {
+        if (modalOpen) {  // 모달이 열려있을 때만 alert 표시
+            console.error('Failed to load image:', this.src);
+            alert('이미지를 불러올 수 없습니다.');
+            closeModal();
+        }
+    };
+
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('imageModal').onclick = function(event) {
+        if (event.target === this) {
+            closeModal();
+        }
+    };
+
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModal();
+        } else if (event.key === 'ArrowLeft') {
+            if (modalOpen) {
+                changeImage(-1);
+            }
+        } else if (event.key === 'ArrowRight') {
+            if (modalOpen) {
+                changeImage(1);
+            }
+        }
+    });
+
+    function toggleVisibility(id) {
+        if (confirm('게시 상태를 변경하시겠습니까?')) {
+            fetch(`/award/api/toggle-visibility/${id}`, {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                alert('상태 변경 중 오류가 발생했습니다.');
+                console.error('Error:', error);
+            });
+        }
+    }
+
+    function deleteAward(id) {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            fetch(`/award/api/delete/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                alert('삭제 중 오류가 발생했습니다.');
+                console.error('Error:', error);
+            });
+        }
+    }
+</script>
+</body>
+</html>

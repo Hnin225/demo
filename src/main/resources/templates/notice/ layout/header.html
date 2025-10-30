@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">안양시 스마트도시 통합센터</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; }
+
+        /* 상단바 */
+        .top-bar {
+            background: white;
+            height: 60px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #5B7FFF;
+        }
+        .top-menu {
+            margin-left: auto;
+            display: flex;
+            gap: 30px;
+        }
+        .top-menu a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+        }
+        .logout-btn {
+            padding: 8px 20px;
+            background: #ff5757;
+            color: white;
+            border-radius: 5px;
+        }
+
+        /* 사이드바 */
+        .sidebar {
+            width: 200px;
+            background: white;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            padding: 20px 0;
+        }
+        .sidebar-title {
+            padding: 0 20px 15px 20px;
+            font-size: 14px;
+            color: #999;
+            font-weight: 600;
+        }
+        .sidebar-menu {
+            list-style: none;
+        }
+        .sidebar-menu li a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+        }
+        .sidebar-menu li a:hover {
+            background: #f0f4ff;
+            color: #5B7FFF;
+            border-right: 3px solid #5B7FFF;
+        }
+        .sidebar-menu li a.active {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        /* 메인 컨텐츠 */
+        .main-content {
+            margin-left: 200px;
+            margin-top: 60px;
+            padding: 30px;
+            min-height: calc(100vh - 60px);
+        }
+
+        .page-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .page-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .page-subtitle {
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<!-- 상단바 -->
+<div class="top-bar">
+    <div class="logo">🏙️ 안양시 스마트도시 통합센터</div>
+    <div class="top-menu">
+        <a href="/">조회</a>
+        <a href="/notice/list">시민 서비스 조회/관리</a>
+        <a href="#">운영 관리</a>
+        <a href="#">시설물 신고 관리</a>
+        <a href="#">환경설정</a>
+        <a href="#" class="logout-btn">로그아웃</a>
+    </div>
+</div>
+
+<!-- 사이드바 -->
+<div class="sidebar">
+    <div class="sidebar-title">시민 서비스 조회/관리</div>
+    <ul class="sidebar-menu">
+        <li><a href="/notice/list">공지사항</a></li>
+        <li><a href="/press/list">보도자료</a></li>
+        <li><a href="/visit/list">방문사진</a></li>
+        <li><a href="/video/list">홍보영상</a></li>
+    </ul>
+</div>
+
+<!-- 메인 컨텐츠 -->
+<div class="main-content">

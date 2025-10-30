@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 - 안양 스마트도시 통합센터</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; }
+
+        /* 상단바 */
+        .top-bar {
+            background: white;
+            height: 60px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #5B7FFF;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .top-menu {
+            margin-left: auto;
+            display: flex;
+            gap: 30px;
+        }
+
+        .top-menu a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: #ff5757;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        /* 사이드바 */
+        .sidebar {
+            width: 200px;
+            background: white;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            padding: 0 20px 15px 20px;
+            font-size: 14px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu li a:hover {
+            background: #f0f4ff;
+            color: #5B7FFF;
+            border-right: 3px solid #5B7FFF;
+        }
+
+        .sidebar-menu li a.active {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        /* 메인 컨텐츠 */
+        .main-content {
+            margin-left: 200px;
+            margin-top: 60px;
+            padding: 30px;
+            min-height: calc(100vh - 60px);
+        }
+
+        .content-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #5B7FFF;
+        }
+
+        /* 검색 영역 */
+        .search-area {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .search-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .search-label {
+            min-width: 80px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .search-area select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-area input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .search-area input[type="date"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .btn-search {
+            padding: 10px 30px;
+            background: #5B7FFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-search:hover {
+            background: #4a6fe8;
+        }
+
+        .btn-reset {
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-reset:hover {
+            background: #5a6268;
+        }
+
+        /* 필터 태그 */
+        .filter-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            background: #e7f3ff;
+            border: 1px solid #5B7FFF;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .filter-tag .remove {
+            cursor: pointer;
+            color: #ff5757;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        /* 글쓰기 버튼 */
+        .btn-write {
+            float: right;
+            padding: 10px 25px;
+            background: #5B7FFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .btn-write:hover {
+            background: #4a6fe8;
+        }
+
+        /* 테이블 */
+        .notice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .notice-table thead {
+            background: #f8f9fa;
+        }
+
+        .notice-table th {
+            padding: 15px;
+            text-align: center;
+            color: #666;
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .notice-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .notice-table td.title {
+            text-align: left;
+        }
+
+        .notice-table td.title a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .notice-table td.title a:hover {
+            color: #5B7FFF;
+        }
+
+        .notice-table tr.pinned {
+            background: #fffacd;
+        }
+
+        .notice-table tr.pinned .badge {
+            background: #666;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .notice-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-reserved {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-ended {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* 버튼 스타일 */
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin: 0 2px;
+        }
+
+        .btn-view {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #1976D2;
+        }
+
+        .btn-edit {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #4a6fe8;
+        }
+
+        .btn-delete {
+            background: #ff5757;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #ff3333;
+        }
+    </style>
+</head>
+<body>
+<!-- 상단바 -->
+<div class="top-bar">
+    <a href="/" class="logo">🏙️ 안양시 스마트도시 통합센터</a>
+    <div class="top-menu">
+        <a href="/">조회</a>
+        <a href="/notice/list">시민 서비스 조회/관리</a>
+        <a href="/award/list">운영 관리</a>
+        <a href="#">시설물 신고 관리</a>
+        <a href="/user/list">환경설정</a>
+        <a href="#" class="logout-btn">로그아웃</a>
+    </div>
+</div>
+
+<!-- 사이드바 -->
+<div class="sidebar">
+    <div class="sidebar-title">시민 서비스 조회/관리</div>
+    <ul class="sidebar-menu">
+        <li><a href="/notice/list" class="active">공지사항</a></li>
+        <li><a href="/press/list">보도자료</a></li>
+        <li><a href="/visit/list">방문사진</a></li>
+        <li><a href="/video/list">홍보영상</a></li>
+    </ul>
+</div>
+
+<!-- 메인 컨텐츠 -->
+<div class="main-content">
+    <div class="content-box">
+        <h1 class="page-title">📢 공지사항</h1>
+
+        <!-- 고급 검색 영역 -->
+        <form action="/notice/list" method="get" id="searchForm">
+            <div class="search-area">
+                <!-- 첫 번째 줄: 검색 영역 + 키워드 -->
+                <div class="search-row">
+                    <span class="search-label">검색 조건</span>
+                    <select name="searchType" id="searchType" style="width: 150px;">
+                        <option value="전체" th:selected="${searchType == '전체'}">전체</option>
+                        <option value="제목" th:selected="${searchType == '제목'}">제목</option>
+                        <option value="작성자" th:selected="${searchType == '작성자'}">작성자</option>
+                    </select>
+
+                    <input type="text"
+                           name="keyword"
+                           id="keyword"
+                           th:value="${keyword}"
+                           placeholder="검색어를 입력하세요"
+                           style="flex: 1;">
+                </div>
+
+                <!-- 두 번째 줄: 분류 + 상태 -->
+                <div class="search-row">
+                    <span class="search-label">분류</span>
+                    <select name="category" id="category" style="width: 150px;">
+                        <option value="전체" th:selected="${category == null or category == '전체'}">전체</option>
+                        <option value="안전" th:selected="${category == '안전'}">안전</option>
+                        <option value="교통" th:selected="${category == '교통'}">교통</option>
+                        <option value="환경" th:selected="${category == '환경'}">환경</option>
+                        <option value="복지" th:selected="${category == '복지'}">복지</option>
+                        <option value="행사" th:selected="${category == '행사'}">행사</option>
+                        <option value="일반" th:selected="${category == '일반'}">일반</option>
+                    </select>
+
+                    <span class="search-label" style="margin-left: 20px;">상태</span>
+                    <select name="status" id="status" style="width: 150px;">
+                        <option value="전체" th:selected="${status == null or status == '전체'}">전체</option>
+                        <option value="게시 중" th:selected="${status == '게시 중'}">게시 중</option>
+                        <option value="예약" th:selected="${status == '예약'}">예약</option>
+                        <option value="게시 종료" th:selected="${status == '게시 종료'}">게시 종료</option>
+                    </select>
+                </div>
+
+                <!-- 세 번째 줄: 날짜 검색 -->
+                <div class="search-row">
+                    <span class="search-label">작성일</span>
+                    <input type="date"
+                           name="startDate"
+                           id="startDate"
+                           th:value="${startDate}"
+                           style="width: 180px;">
+                    <span style="margin: 0 10px;">~</span>
+                    <input type="date"
+                           name="endDate"
+                           id="endDate"
+                           th:value="${endDate}"
+                           style="width: 180px;">
+
+                    <button type="submit" class="btn-search" style="margin-left: auto;">🔍 검색</button>
+                    <button type="button" class="btn-reset" onclick="resetSearch()">초기화</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- 적용된 필터 표시 -->
+        <div class="filter-tags" id="filterTags"></div>
+
+        <a href="/notice/write" class="btn-write">✏️ 글쓰기</a>
+        <div style="clear: both;"></div>
+
+        <p>총 <strong th:text="${#lists.size(notices)}">0</strong>건</p>
+
+        <!-- 공지사항 테이블 -->
+        <table class="notice-table">
+            <thead>
+            <tr>
+                <th style="width: 80px;">No.</th>
+                <th style="width: 100px;">상태</th>
+                <th style="width: 120px;">분류</th>
+                <th>제목</th>
+                <th style="width: 140px;">작성일자</th>
+                <th style="width: 100px;">작성자</th>
+                <th style="width: 80px;">조회수</th>
+                <th style="width: 200px;">관리</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${notices == null or notices.isEmpty()}">
+                <td colspan="8" class="empty-state">검색 결과가 없습니다.</td>
+            </tr>
+            <tr th:each="notice, stat : ${notices}"
+                th:class="${notice.pinned} ? 'pinned' : ''">
+                <td>
+                    <span th:if="${notice.pinned}" class="badge">고정</span>
+                    <span th:unless="${notice.pinned}" th:text="${stat.count}"></span>
+                </td>
+                <td>
+                    <span th:if="${notice.status == '게시 중'}" class="status-badge status-active">게시 중</span>
+                    <span th:if="${notice.status == '예약'}" class="status-badge status-reserved">예약</span>
+                    <span th:if="${notice.status == '게시 종료'}" class="status-badge status-ended">게시 종료</span>
+                </td>
+                <td th:text="${notice.category != null ? notice.category : '-'}"></td>
+                <td class="title">
+                    <a th:href="@{/notice/detail/{id}(id=${notice.id})}"
+                       th:text="${notice.title}"></a>
+                </td>
+                <td th:text="${#temporals.format(notice.createdAt, 'yyyy.MM.dd HH:mm')}"></td>
+                <td th:text="${notice.author != null ? notice.author : '관리자'}"></td>
+                <td th:text="${notice.viewCount}"></td>
+                <td>
+                    <button class="btn btn-view"
+                            th:onclick="'location.href=\'/notice/detail/' + ${notice.id} + '\''">
+                        상세
+                    </button>
+                    <button class="btn btn-edit"
+                            th:onclick="'location.href=\'/notice/edit/' + ${notice.id} + '\''">
+                        수정
+                    </button>
+                    <button class="btn btn-delete"
+                            th:onclick="'deleteNotice(' + ${notice.id} + ')'">
+                        삭제
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    // 페이지 로드 시 필터 태그 표시
+    window.onload = function() {
+        displayFilterTags();
+    };
+
+    function displayFilterTags() {
+        const filterTagsDiv = document.getElementById('filterTags');
+        filterTagsDiv.innerHTML = '';
+
+        const keyword = /*[[${keyword}]]*/ '';
+        const searchType = /*[[${searchType}]]*/ '전체';
+        const category = /*[[${category}]]*/ '전체';
+        const status = /*[[${status}]]*/ '전체';
+        const startDate = /*[[${startDate}]]*/ '';
+        const endDate = /*[[${endDate}]]*/ '';
+
+        if (keyword && keyword.trim() !== '') {
+            addFilterTag(filterTagsDiv, `검색: ${keyword} (${searchType})`, 'keyword');
+        }
+
+        if (category && category !== '전체') {
+            addFilterTag(filterTagsDiv, `분류: ${category}`, 'category');
+        }
+
+        if (status && status !== '전체') {
+            addFilterTag(filterTagsDiv, `상태: ${status}`, 'status');
+        }
+
+        if (startDate || endDate) {
+            const dateText = `날짜: ${startDate || '시작일'} ~ ${endDate || '종료일'}`;
+            addFilterTag(filterTagsDiv, dateText, 'date');
+        }
+    }
+
+    function addFilterTag(container, text, type) {
+        const tag = document.createElement('div');
+        tag.className = 'filter-tag';
+        tag.innerHTML = `
+            ${text}
+            <span class="remove" onclick="removeFilter('${type}')">✕</span>
+        `;
+        container.appendChild(tag);
+    }
+
+    function removeFilter(type) {
+        if (type === 'keyword') {
+            document.getElementById('keyword').value = '';
+        } else if (type === 'category') {
+            document.getElementById('category').value = '전체';
+        } else if (type === 'status') {
+            document.getElementById('status').value = '전체';
+        } else if (type === 'date') {
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+        }
+        document.getElementById('searchForm').submit();
+    }
+
+    function resetSearch() {
+        document.getElementById('searchType').selectedIndex = 0;
+        document.getElementById('keyword').value = '';
+        document.getElementById('category').selectedIndex = 0;
+        document.getElementById('status').selectedIndex = 0;
+        document.getElementById('startDate').value = '';
+        document.getElementById('endDate').value = '';
+        document.getElementById('searchForm').submit();
+    }
+
+    function deleteNotice(id) {
+        if (confirm('정말 삭제하시겠습니까? 삭제된 목록은 복구할 수 없습니다.')) {
+            fetch(`/notice/api/delete/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                alert('삭제 중 오류가 발생했습니다.');
+                console.error('Error:', error);
+            });
+        }
+    }
+</script>
+</body>
+</html>

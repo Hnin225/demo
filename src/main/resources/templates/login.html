@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 - 안양시 스마트도시 통합센터</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 50px 60px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 450px;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #5B7FFF;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: #5B7FFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background: #4a6fe8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(91, 127, 255, 0.4);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link a:hover {
+            color: #5B7FFF;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="logo">🏙️</div>
+    <h1 class="title">관리자 로그인</h1>
+
+    <form method="post" action="/login">
+        <div class="form-group">
+            <label>아이디</label>
+            <input type="text" name="username" required placeholder="아이디를 입력하세요">
+        </div>
+
+        <div class="form-group">
+            <label>비밀번호</label>
+            <input type="password" name="password" required placeholder="비밀번호를 입력하세요">
+        </div>
+
+        <button type="submit" class="btn-submit">로그인</button>
+    </form>
+
+    <div class="back-link">
+        <a href="/">← 메인으로 돌아가기</a>
+    </div>
+</div>
+</body>
+</html>

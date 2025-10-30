@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>연도별 수상 이력 상세</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', 'Malgun Gothic', Arial, sans-serif; background: #f5f7fa; }
+
+        .top-bar {
+            background: white;
+            height: 60px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #5B7FFF;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .logo:hover { transform: scale(1.05); }
+
+        .top-menu { margin-left: auto; display: flex; gap: 30px; }
+        .top-menu a { text-decoration: none; color: #666; font-weight: 500; }
+        .logout-btn { padding: 8px 20px; background: #ff5757; color: white; border-radius: 5px; }
+
+        .sidebar {
+            width: 200px;
+            background: white;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            padding: 20px 0;
+        }
+        .sidebar-title { padding: 0 20px 15px 20px; font-size: 14px; color: #999; font-weight: 600; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li a { display: block; padding: 12px 20px; text-decoration: none; color: #333; }
+        .sidebar-menu li a.active { background: #5B7FFF; color: white; }
+
+        .main-content { margin-left: 200px; margin-top: 60px; padding: 30px; }
+        .content-box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .page-title { font-size: 24px; color: #333; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #5B7FFF; }
+
+        .detail-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .detail-section h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .detail-section .number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: #4ade80;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+        .detail-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .award-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .award-item:hover {
+            background: #e9ecef;
+        }
+        .award-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .award-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        .award-amount {
+            font-size: 14px;
+            color: #666;
+        }
+        .award-toggle {
+            font-size: 20px;
+            color: #999;
+        }
+        .award-details {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+        .award-details.active {
+            display: block;
+        }
+        .award-image {
+            max-width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-group { margin-top: 30px; display: flex; justify-content: space-between; }
+        .btn { padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-size: 15px; font-weight: 600; text-decoration: none; display: inline-block; }
+        .btn-delete { background: #dc3545; color: white; }
+        .btn-edit { background: #5B7FFF; color: white; }
+        .btn-list { background: #6c757d; color: white; }
+
+        /* 이미지 팝업 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+        }
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="top-bar">
+    <a href="/" class="logo">🏙️ 안양시 스마트도시 통합센터</a>
+    <div class="top-menu">
+        <a href="/dashboard">조회</a>
+        <a href="/notice/list">시민 서비스 조회/관리</a>
+        <a href="#">운영 관리</a>
+        <a href="#">시설물 신고 관리</a>
+        <a href="#">환경설정</a>
+        <a href="/" class="logout-btn">로그아웃</a>
+    </div>
+</div>
+
+<div class="sidebar">
+    <div class="sidebar-title">운영 관리</div>
+    <ul class="sidebar-menu">
+        <li><a href="#">운영 실적 통계</a></li>
+        <li><a href="/award/list" class="active">연도별 수상 이력</a></li>
+        <li><a href="#">방문 국가 관리</a></li>
+        <li><a href="#">방문 사진 관리</a></li>
+        <li><a href="#">조직도 관리</a></li>
+    </ul>
+</div>
+
+<div class="main-content">
+    <div class="content-box">
+        <h1 class="page-title">🏆 연도별 수상 이력</h1>
+
+        <div class="detail-section">
+            <h3><span class="number">1</span><span th:text="${award.year} + ' 수상 내역'"></span></h3>
+        </div>
+
+        <div class="detail-section">
+            <h3><span class="number">2</span>제목</h3>
+            <div class="detail-content" th:text="${award.description}">제목입니다.</div>
+        </div>
+
+        <div class="detail-section">
+            <h3><span class="number">3</span>첨부파일</h3>
+            <div class="detail-content">
+                <span th:text="${award.attachmentPath}">첨부파일명.jpg</span>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h3><span class="number">4</span><span th:text="${award.year} + ' 내역'"></span></h3>
+            <div>
+                <!-- 예시 수상 내역 (실제로는 awards 필드를 파싱해서 표시) -->
+                <div class="award-item" onclick="toggleAward(this)">
+                    <div class="award-item-header">
+                        <span class="award-title">2024년 대한민국 지방자치단체 행정대상 종합대상 수상</span>
+                        <span class="award-amount">업로드일: 0000.00.00 00:00</span>
+                        <span class="award-toggle">▼</span>
+                    </div>
+                    <div class="award-details">
+                        <img src="/images/sample.jpg" alt="수상 이미지" class="award-image" onclick="openModal(this.src)">
+                    </div>
+                </div>
+
+                <div class="award-item" onclick="toggleAward(this)">
+                    <div class="award-item-header">
+                        <span class="award-title">2024년 월드 스마트시티 엑스포 스마트시티상 수상</span>
+                        <span class="award-amount">업로드일: 0000.00.00</span>
+                        <span class="award-toggle">▼</span>
+                    </div>
+                    <div class="award-details">
+                        <img src="/images/sample.jpg" alt="수상 이미지" class="award-image" onclick="openModal(this.src)">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <div>
+                <a th:href="@{/award/delete/{id}(id=${award.id})}"
+                   class="btn btn-delete"
+                   onclick="return confirm('정말 삭제하시겠습니까?')">삭제하기</a>
+                <a th:href="@{/award/edit/{id}(id=${award.id})}" class="btn btn-edit">수정하기</a>
+            </div>
+            <a href="/award/list" class="btn btn-list">목록으로</a>
+        </div>
+    </div>
+</div>
+
+<!-- 이미지 팝업 모달 -->
+<div id="imageModal" class="modal" onclick="closeModal()">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage">
+</div>
+
+<script>
+        function toggleAward(element) {
+            const details = element.querySelector('.award-details');
+            const toggle = element.querySelector('.award-toggle');
+
+            if (details.classList.contains('active')) {
+                details.classList.remove('active');
+                toggle.textContent = '▼';
+            } else {
+                details.classList.add('active');
+                toggle.textContent = '▲';
+            }
+        }
+
+        function openModal(src) {
+            event.stopPropagation();
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.classList.add('active');
+            modalImg.src = src;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+        }
+    </script>
+</body>
+</html>

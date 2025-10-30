@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>홍보영상 - 안양 스마트도시 통합센터</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; }
+
+        .top-bar {
+            background: white;
+            height: 60px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #5B7FFF;
+            text-decoration: none;
+        }
+
+        .top-menu {
+            margin-left: auto;
+            display: flex;
+            gap: 30px;
+        }
+
+        .top-menu a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: #ff5757;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .sidebar {
+            width: 200px;
+            background: white;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            padding: 0 20px 15px 20px;
+            font-size: 14px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu li a:hover {
+            background: #f0f4ff;
+            color: #5B7FFF;
+            border-right: 3px solid #5B7FFF;
+        }
+
+        .sidebar-menu li a.active {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 200px;
+            margin-top: 60px;
+            padding: 30px;
+            min-height: calc(100vh - 60px);
+        }
+
+        .content-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #5B7FFF;
+        }
+
+        .search-area {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-label {
+            min-width: 80px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .search-area select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-area input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .btn-search {
+            padding: 10px 30px;
+            background: #5B7FFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-search:hover {
+            background: #4a6fe8;
+        }
+
+        .btn-reset {
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-reset:hover {
+            background: #5a6268;
+        }
+
+        .btn-write {
+            float: right;
+            padding: 10px 25px;
+            background: #5B7FFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .btn-write:hover {
+            background: #4a6fe8;
+        }
+
+        .notice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .notice-table thead {
+            background: #f8f9fa;
+        }
+
+        .notice-table th {
+            padding: 15px;
+            text-align: center;
+            color: #666;
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .notice-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .notice-table td.title {
+            text-align: left;
+        }
+
+        .notice-table td.title a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .notice-table td.title a:hover {
+            color: #5B7FFF;
+        }
+
+        .notice-table tr.pinned {
+            background: #fffacd;
+        }
+
+        .notice-table tr.pinned .badge {
+            background: #666;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .notice-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-reserved {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-ended {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin: 0 2px;
+        }
+
+        .btn-view {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #1976D2;
+        }
+
+        .btn-edit {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #4a6fe8;
+        }
+
+        .btn-delete {
+            background: #ff5757;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #ff3333;
+        }
+    </style>
+</head>
+<body>
+<div class="top-bar">
+    <a href="/" class="logo">🏙️ 안양시 스마트도시 통합센터</a>
+    <div class="top-menu">
+        <a href="/">조회</a>
+        <a href="/notice/list">시민 서비스 조회/관리</a>
+        <a href="/award/list">운영 관리</a>
+        <a href="#">시설물 신고 관리</a>
+        <a href="/user/list">환경설정</a>
+        <a href="#" class="logout-btn">로그아웃</a>
+    </div>
+</div>
+
+<div class="sidebar">
+    <div class="sidebar-title">시민 서비스 조회/관리</div>
+    <ul class="sidebar-menu">
+        <li><a href="/notice/list">공지사항</a></li>
+        <li><a href="/press/list">보도자료</a></li>
+        <li><a href="/visit/list">방문사진</a></li>
+        <li><a href="/video/list" class="active">홍보영상</a></li>
+    </ul>
+</div>
+
+<div class="main-content">
+    <div class="content-box">
+        <h1 class="page-title">🎬 홍보영상</h1>
+
+        <form action="/video/list" method="get" id="searchForm">
+            <div class="search-area">
+                <div class="search-row">
+                    <span class="search-label">검색 조건</span>
+                    <select name="searchType" id="searchType" style="width: 150px;">
+                        <option value="전체" th:selected="${searchType == '전체'}">전체</option>
+                        <option value="제목" th:selected="${searchType == '제목'}">제목</option>
+                        <option value="작성자" th:selected="${searchType == '작성자'}">작성자</option>
+                    </select>
+
+                    <input type="text"
+                           name="keyword"
+                           id="keyword"
+                           th:value="${keyword}"
+                           placeholder="검색어를 입력하세요"
+                           style="flex: 1;">
+
+                    <span class="search-label" style="margin-left: 20px;">상태</span>
+                    <select name="status" id="status" style="width: 150px;">
+                        <option value="전체" th:selected="${status == null or status == '전체'}">전체</option>
+                        <option value="게시 중" th:selected="${status == '게시 중'}">게시 중</option>
+                        <option value="예약" th:selected="${status == '예약'}">예약</option>
+                        <option value="게시 종료" th:selected="${status == '게시 종료'}">게시 종료</option>
+                    </select>
+
+                    <button type="submit" class="btn-search" style="margin-left: 20px;">🔍 검색</button>
+                    <button type="button" class="btn-reset" onclick="resetSearch()">초기화</button>
+                </div>
+            </div>
+        </form>
+
+        <a href="/video/write" class="btn-write">✏️ 글쓰기</a>
+        <div style="clear: both;"></div>
+
+        <p>총 <strong th:text="${#lists.size(videoList)}">0</strong>건</p>
+
+        <table class="notice-table">
+            <thead>
+            <tr>
+                <th style="width: 80px;">No.</th>
+                <th style="width: 100px;">상태</th>
+                <th>제목</th>
+                <th style="width: 140px;">작성일자</th>
+                <th style="width: 100px;">작성자</th>
+                <th style="width: 80px;">조회수</th>
+                <th style="width: 200px;">관리</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${videoList == null or videoList.isEmpty()}">
+                <td colspan="7" class="empty-state">검색 결과가 없습니다.</td>
+            </tr>
+            <tr th:each="video, stat : ${videoList}"
+                th:class="${video.pinned} ? 'pinned' : ''">
+                <td>
+                    <span th:if="${video.pinned}" class="badge">고정</span>
+                    <span th:unless="${video.pinned}" th:text="${stat.count}"></span>
+                </td>
+                <td>
+                    <span th:if="${video.status == '게시 중'}" class="status-badge status-active">게시 중</span>
+                    <span th:if="${video.status == '예약'}" class="status-badge status-reserved">예약</span>
+                    <span th:if="${video.status == '게시 종료'}" class="status-badge status-ended">게시 종료</span>
+                </td>
+                <td class="title">
+                    <a th:href="@{/video/detail/{id}(id=${video.id})}"
+                       th:text="${video.title}"></a>
+                </td>
+                <td th:text="${#temporals.format(video.createdAt, 'yyyy.MM.dd HH:mm')}"></td>
+                <td th:text="${video.author != null ? video.author : '관리자'}"></td>
+                <td th:text="${video.viewCount}"></td>
+                <td>
+                    <button class="btn btn-view"
+                            th:onclick="'location.href=\'/video/detail/' + ${video.id} + '\''">
+                        상세
+                    </button>
+                    <button class="btn btn-edit"
+                            th:onclick="'location.href=\'/video/edit/' + ${video.id} + '\''">
+                        수정
+                    </button>
+                    <button class="btn btn-delete"
+                            th:onclick="'deleteVideo(' + ${video.id} + ')'">
+                        삭제
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function resetSearch() {
+        document.getElementById('searchType').selectedIndex = 0;
+        document.getElementById('keyword').value = '';
+        document.getElementById('status').selectedIndex = 0;
+        document.getElementById('searchForm').submit();
+    }
+
+    function deleteVideo(id) {
+        if (confirm('정말 삭제하시겠습니까? 삭제된 목록은 복구할 수 없습니다.')) {
+            fetch(`/video/api/delete/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                alert('삭제 중 오류가 발생했습니다.');
+                console.error('Error:', error);
+            });
+        }
+    }
+</script>
+</body>
+</html>

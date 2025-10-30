@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수상 이력 등록 - 안양 스마트도시 통합센터</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f5f7fa;
+        }
+
+        /* 상단바 */
+        .top-bar {
+            background: white;
+            height: 60px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #5B7FFF;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .top-menu {
+            margin-left: auto;
+            display: flex;
+            gap: 30px;
+        }
+
+        .top-menu a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: #ff5757;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        /* 사이드바 */
+        .sidebar {
+            width: 200px;
+            background: white;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            padding: 0 20px 15px 20px;
+            font-size: 14px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu li a:hover {
+            background: #f0f4ff;
+            color: #5B7FFF;
+            border-right: 3px solid #5B7FFF;
+        }
+
+        .sidebar-menu li a.active {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        /* 메인 컨텐츠 */
+        .main-content {
+            margin-left: 200px;
+            margin-top: 60px;
+            padding: 30px;
+            min-height: calc(100vh - 60px);
+        }
+
+        .content-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #5B7FFF;
+        }
+
+        /* 폼 스타일 */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-label .required {
+            color: #ff5757;
+            margin-left: 3px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #5B7FFF;
+        }
+
+        .form-input.error {
+            border-color: #ff5757;
+        }
+
+        .form-text {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .form-text.error {
+            color: #ff5757;
+        }
+
+        .char-count {
+            float: right;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-label:hover {
+            background: #e9ecef;
+        }
+
+        .file-name {
+            margin-left: 10px;
+            color: #666;
+        }
+
+        .preview-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* 버튼 */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4a6fe8;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .validation-info {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .validation-info h4 {
+            color: #2196F3;
+            margin-bottom: 10px;
+        }
+
+        .validation-info ul {
+            margin-left: 20px;
+            color: #666;
+        }
+
+        .validation-info li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+<!-- 상단바 -->
+<div class="top-bar">
+    <a href="/dashboard" class="logo">🏙️ 안양시 스마트도시 통합센터</a>
+    <div class="top-menu">
+        <a href="/dashboard">조회</a>
+        <a href="/notice/list">시민 서비스 조회/관리</a>
+        <a href="/award/list">운영 관리</a>
+        <a href="#">시설물 신고 관리</a>
+        <a href="/user/list">환경설정</a>
+        <a href="/" class="logout-btn">로그아웃</a>
+    </div>
+</div>
+
+<!-- 사이드바 -->
+<div class="sidebar">
+    <div class="sidebar-title">시민 서비스 조회/관리</div>
+    <ul class="sidebar-menu">
+        <li><a href="/notice/list">공지사항</a></li>
+        <li><a href="/press/list">보도자료</a></li>
+        <li><a href="/visit/list">방문사진</a></li>
+        <li><a href="/video/list">홍보영상</a></li>
+    </ul>
+
+    <div class="sidebar-title" style="margin-top: 20px;">운영 관리</div>
+    <ul class="sidebar-menu">
+        <li><a href="/stats/list">운영 실적 통계</a></li>
+        <li><a href="/award/list" class="active">연도별 수상 이력</a></li>
+        <li><a href="/country/list">방문 국가 관리</a></li>
+        <li><a href="/schedule/list">방문 사전 관리</a></li>
+        <li><a href="/org/list">조직도 관리</a></li>
+    </ul>
+</div>
+
+<!-- 메인 컨텐츠 -->
+<div class="main-content">
+    <div class="content-box">
+        <h1 class="page-title">🏆 수상 이력 등록</h1>
+
+        <!-- 유효성 검사 안내 -->
+        <div class="validation-info">
+            <h4>📋 입력 규칙</h4>
+            <ul>
+                <li><strong>제목:</strong> 10-50자, 영문 대/소문자(A-Z, a-z), 숫자(0-9), 한글, 허용 특수문자 32개</li>
+                <li><strong>특수문자:</strong> ! @ # $ % ^ & * ( ) _ + - = [ ] { } | ; : ' , . < > ? / ~ ` " 와 공백</li>
+                <li><strong>파일명:</strong> 영문, 숫자, 점(.), 하이픈(-), 언더스코어(_)만 가능 (공백/특수문자 불가)</li>
+                <li><strong>파일 크기:</strong> 최대 20MB</li>
+                <li><strong>파일 형식:</strong> jpg, jpeg, png, svg만 가능</li>
+            </ul>
+        </div>
+
+        <form id="awardForm" enctype="multipart/form-data">
+            <!-- 연도 -->
+            <div class="form-group">
+                <label class="form-label">
+                    연도<span class="required">*</span>
+                </label>
+                <input type="number"
+                       class="form-input"
+                       id="year"
+                       name="year"
+                       min="2000"
+                       max="2100"
+                       required
+                       placeholder="예: 2023">
+                <div class="form-text">수상 연도를 입력하세요.</div>
+            </div>
+
+            <!-- 제목 -->
+            <div class="form-group">
+                <label class="form-label">
+                    제목<span class="required">*</span>
+                    <span class="char-count">
+                        <span id="titleLength">0</span> / 50자
+                    </span>
+                </label>
+                <input type="text"
+                       class="form-input"
+                       id="title"
+                       name="title"
+                       required
+                       minlength="10"
+                       maxlength="50"
+                       placeholder="수상 내용을 10-50자로 입력하세요">
+                <div class="form-text" id="titleError"></div>
+            </div>
+
+            <!-- 작성자 -->
+            <div class="form-group">
+                <label class="form-label">작성자</label>
+                <input type="text"
+                       class="form-input"
+                       id="author"
+                       name="author"
+                       placeholder="작성자 이름 (선택사항)">
+                <div class="form-text">비워두면 '관리자'로 표시됩니다.</div>
+            </div>
+
+            <!-- 이미지 파일 -->
+            <div class="form-group">
+                <label class="form-label">
+                    이미지 파일
+                    <span class="required">*</span>
+                </label>
+                <div class="file-input-wrapper">
+                    <input type="file"
+                           class="file-input"
+                           id="imageFile"
+                           name="imageFile"
+                           accept=".jpg,.jpeg,.png,.svg"
+                           required>
+                    <label for="imageFile" class="file-label">📁 파일 선택</label>
+                    <span class="file-name" id="fileName">선택된 파일 없음</span>
+                </div>
+                <div class="form-text">jpg, jpeg, png, svg 파일만 업로드 가능 (최대 20MB)</div>
+                <div class="form-text error" id="fileError"></div>
+
+                <!-- 미리보기 -->
+                <div class="preview-box" id="previewBox">
+                    <strong>미리보기:</strong>
+                    <br>
+                    <img id="previewImage" class="preview-image" src="" alt="Preview">
+                </div>
+            </div>
+
+            <!-- 게시 여부 -->
+            <div class="form-group">
+                <label class="form-label">게시 설정</label>
+                <div class="checkbox-group">
+                    <input type="checkbox"
+                           class="checkbox-input"
+                           id="isVisible"
+                           name="isVisible"
+                           checked>
+                    <label for="isVisible">즉시 게시 (체크 해제 시 숨김 상태로 저장)</label>
+                </div>
+            </div>
+
+            <!-- 버튼 그룹 -->
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">등록</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='/award/list'">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 허용된 특수문자 (32개)
+    const allowedSpecialChars = "!@#$%^&*()_+-=[]{}|;:',.<>?/~`\" ";
+
+    // 제목 글자 수 카운트
+    document.getElementById('title').addEventListener('input', function(e) {
+        const length = e.target.value.length;
+        document.getElementById('titleLength').textContent = length;
+
+        // 실시간 유효성 검사
+        validateTitle(e.target.value);
+    });
+
+    // 제목 유효성 검사
+    function validateTitle(title) {
+        const errorDiv = document.getElementById('titleError');
+        const titleInput = document.getElementById('title');
+
+        if (title.length < 10) {
+            errorDiv.textContent = '제목은 최소 10자 이상이어야 합니다.';
+            errorDiv.className = 'form-text error';
+            titleInput.classList.add('error');
+            return false;
+        } else if (title.length > 50) {
+            errorDiv.textContent = '제목은 최대 50자까지 입력 가능합니다.';
+            errorDiv.className = 'form-text error';
+            titleInput.classList.add('error');
+            return false;
+        }
+
+        // 허용되지 않은 문자 검사
+        for (let char of title) {
+            const isAlphaNum = /[a-zA-Z0-9가-힣]/.test(char);
+            const isAllowedSpecial = allowedSpecialChars.includes(char);
+
+            if (!isAlphaNum && !isAllowedSpecial) {
+                errorDiv.textContent = `허용되지 않은 문자가 포함되어 있습니다: '${char}'`;
+                errorDiv.className = 'form-text error';
+                titleInput.classList.add('error');
+                return false;
+            }
+        }
+
+        errorDiv.textContent = '✓ 유효한 제목입니다.';
+        errorDiv.className = 'form-text';
+        errorDiv.style.color = '#4CAF50';
+        titleInput.classList.remove('error');
+        return true;
+    }
+
+    // 파일 선택 이벤트
+    document.getElementById('imageFile').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const fileNameSpan = document.getElementById('fileName');
+        const fileError = document.getElementById('fileError');
+        const previewBox = document.getElementById('previewBox');
+        const previewImage = document.getElementById('previewImage');
+
+        if (!file) {
+            fileNameSpan.textContent = '선택된 파일 없음';
+            previewBox.style.display = 'none';
+            return;
+        }
+
+        // 파일명 검증 (영문, 숫자, ., -, _ 만 허용)
+        const fileName = file.name;
+        if (!/^[a-zA-Z0-9._-]+$/.test(fileName)) {
+            fileError.textContent = '❌ 파일명에 공백이나 특수문자가 포함될 수 없습니다. (영문, 숫자, ., -, _만 가능)';
+            e.target.value = '';
+            fileNameSpan.textContent = '선택된 파일 없음';
+            previewBox.style.display = 'none';
+            return;
+        }
+
+        // 파일 크기 검증 (20MB)
+        const maxSize = 20 * 1024 * 1024; // 20MB
+        if (file.size > maxSize) {
+            fileError.textContent = '❌ 파일 크기는 20MB를 초과할 수 없습니다.';
+            e.target.value = '';
+            fileNameSpan.textContent = '선택된 파일 없음';
+            previewBox.style.display = 'none';
+            return;
+        }
+
+        // 확장자 검증
+        const extension = fileName.split('.').pop().toLowerCase();
+        const allowedExtensions = ['jpg', 'jpeg', 'png', 'svg'];
+        if (!allowedExtensions.includes(extension)) {
+            fileError.textContent = '❌ jpg, jpeg, png, svg 파일만 업로드 가능합니다.';
+            e.target.value = '';
+            fileNameSpan.textContent = '선택된 파일 없음';
+            previewBox.style.display = 'none';
+            return;
+        }
+
+        // 유효성 검사 통과
+        fileError.textContent = '✓ 유효한 파일입니다.';
+        fileError.style.color = '#4CAF50';
+        fileNameSpan.textContent = fileName;
+
+        // 미리보기
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImage.src = e.target.result;
+            previewBox.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // 폼 제출
+    document.getElementById('awardForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const year = document.getElementById('year').value;
+        const title = document.getElementById('title').value;
+        const author = document.getElementById('author').value;
+        const imageFile = document.getElementById('imageFile').files[0];
+        const isVisible = document.getElementById('isVisible').checked;
+
+        // 유효성 검사
+        if (!year || year < 2000 || year > 2100) {
+            alert('올바른 연도를 입력하세요. (2000-2100)');
+            return;
+        }
+
+        if (!validateTitle(title)) {
+            alert('제목을 올바르게 입력하세요.');
+            return;
+        }
+
+        if (!imageFile) {
+            alert('이미지 파일을 선택하세요.');
+            return;
+        }
+
+        // FormData 생성
+        const formData = new FormData();
+        formData.append('year', year);
+        formData.append('title', title);
+        formData.append('author', author);
+        formData.append('imageFile', imageFile);
+        formData.append('isVisible', isVisible);
+
+        // 서버 전송
+        fetch('/award/api/save', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('수상 이력이 등록되었습니다.');
+            location.href = '/award/list';
+        })
+        .catch(error => {
+            alert('등록 중 오류가 발생했습니다:\n' + error.message);
+            console.error('Error:', error);
+        });
+    });
+</script>
+</body>
+</html>

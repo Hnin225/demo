@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 계정 관리 - 안양 스마트도시 통합센터</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f5f7fa;
+        }
+
+        /* 상단바 */
+        .top-bar {
+            background: white;
+            height: 60px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #5B7FFF;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .top-menu {
+            margin-left: auto;
+            display: flex;
+            gap: 30px;
+        }
+
+        .top-menu a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: #ff5757;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        /* 사이드바 */
+        .sidebar {
+            width: 200px;
+            background: white;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            padding: 0 20px 15px 20px;
+            font-size: 14px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu li a:hover {
+            background: #f0f4ff;
+            color: #5B7FFF;
+            border-right: 3px solid #5B7FFF;
+        }
+
+        .sidebar-menu li a.active {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        /* 메인 컨텐츠 */
+        .main-content {
+            margin-left: 200px;
+            margin-top: 60px;
+            padding: 30px;
+            min-height: calc(100vh - 60px);
+        }
+
+        .content-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #5B7FFF;
+        }
+
+        /* 검색 영역 */
+        .search-area {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-area select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .search-area input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .btn-search {
+            padding: 10px 30px;
+            background: #5B7FFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-search:hover {
+            background: #4a6fe8;
+        }
+
+        /* 버튼 */
+        .btn-write {
+            float: right;
+            padding: 10px 25px;
+            background: #5B7FFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-write:hover {
+            background: #4a6fe8;
+        }
+
+        .btn-excel {
+            float: right;
+            padding: 10px 25px;
+            background: #2ecc71;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            margin-right: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-excel:hover {
+            background: #27ae60;
+        }
+
+        /* 테이블 */
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .user-table thead {
+            background: #f8f9fa;
+        }
+
+        .user-table th {
+            padding: 15px;
+            text-align: center;
+            color: #666;
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .user-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .user-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-active {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .status-inactive {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin: 0 2px;
+        }
+
+        .btn-edit {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #4a6fe8;
+        }
+
+        .btn-delete {
+            background: #ff5757;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #ff3333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<!-- 상단바 -->
+<div class="top-bar">
+    <a href="/dashboard" class="logo">🏙️ 안양시 스마트도시 통합센터</a>
+    <div class="top-menu">
+        <a href="/dashboard">조회</a>
+        <a href="/notice/list">시민 서비스 조회/관리</a>
+        <a href="/award/list">운영 관리</a>
+        <a href="#">시설물 신고 관리</a>
+        <a href="/user/list">환경설정</a>
+        <a href="/" class="logout-btn">로그아웃</a>
+    </div>
+</div>
+
+<!-- 사이드바 -->
+<div class="sidebar">
+    <div class="sidebar-title">시민 서비스 조회/관리</div>
+    <ul class="sidebar-menu">
+        <li><a href="/notice/list">공지사항</a></li>
+        <li><a href="/press/list">보도자료</a></li>
+        <li><a href="/visit/list">방문사진</a></li>
+        <li><a href="/video/list">홍보영상</a></li>
+    </ul>
+
+    <div class="sidebar-title" style="margin-top: 20px;">운영 관리</div>
+    <ul class="sidebar-menu">
+        <li><a href="/stats/list">운영 실적 통계</a></li>
+        <li><a href="/award/list">연도별 수상 이력</a></li>
+        <li><a href="/country/list">방문 국가 관리</a></li>
+        <li><a href="/schedule/list">방문 사전 관리</a></li>
+        <li><a href="/org/list">조직도 관리</a></li>
+    </ul>
+
+    <div class="sidebar-title" style="margin-top: 20px;">환경설정</div>
+    <ul class="sidebar-menu">
+        <li><a href="/user/list" class="active">사용자 계정 관리</a></li>
+        <li><a href="#">사용자 로그인 이력 관리</a></li>
+        <li><a href="#">사용자 계정 이력 조회</a></li>
+    </ul>
+</div>
+
+<!-- 메인 컨텐츠 -->
+<div class="main-content">
+    <div class="content-box">
+        <h1 class="page-title">👤 사용자 계정 관리</h1>
+
+        <!-- 검색 영역 -->
+        <div class="search-area">
+            <select id="searchType">
+                <option value="all">전체</option>
+                <option value="userId">아이디</option>
+                <option value="name">이름</option>
+                <option value="email">이메일</option>
+            </select>
+            <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요">
+            <button class="btn-search" onclick="searchUsers()">검색</button>
+        </div>
+
+        <button class="btn-write" onclick="location.href='/user/write'">✏️ 계정 생성</button>
+        <button class="btn-excel" onclick="downloadExcel()">📊 엑셀 다운로드</button>
+        <div style="clear: both;"></div>
+
+        <p>총 <strong th:text="${#lists.size(users)}">0</strong>건</p>
+
+        <!-- 사용자 테이블 -->
+        <table class="user-table">
+            <thead>
+            <tr>
+                <th style="width: 60px;">No.</th>
+                <th style="width: 120px;">아이디</th>
+                <th style="width: 100px;">이름</th>
+                <th style="width: 100px;">그룹</th>
+                <th style="width: 180px;">이메일</th>
+                <th style="width: 120px;">연락처</th>
+                <th style="width: 120px;">소속 부서</th>
+                <th style="width: 140px;">마지막 접속 일시</th>
+                <th style="width: 80px;">계정 상태</th>
+                <th style="width: 120px;">수정/삭제</th>
+            </tr>
+            </thead>
+            <tbody id="userTableBody">
+            <tr th:if="${users == null or users.isEmpty()}">
+                <td colspan="10" class="empty-state">등록된 사용자가 없습니다.</td>
+            </tr>
+            <tr th:each="user, iterStat : ${users}">
+                <td th:text="${iterStat.count}"></td>
+                <td th:text="${user.userId}"></td>
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.group}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.phone}"></td>
+                <td th:text="${user.department}"></td>
+                <td th:text="${user.lastLogin != null ? #temporals.format(user.lastLogin, 'yyyy.MM.dd HH:mm') : '-'}"></td>
+                <td>
+                    <span th:class="${user.accountStatus == '사용' ? 'status-active' : 'status-inactive'}"
+                          th:text="${user.accountStatus}"></span>
+                </td>
+                <td>
+                    <button class="btn btn-edit" th:onclick="'location.href=\'/user/edit/' + ${user.id} + '\''">수정</button>
+                    <button class="btn btn-delete" th:onclick="'deleteUser(' + ${user.id} + ')'">삭제</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function searchUsers() {
+        const keyword = document.getElementById('searchKeyword').value;
+
+        fetch(`/user/api/search?keyword=${encodeURIComponent(keyword)}`)
+            .then(response => response.json())
+            .then(users => {
+                const tbody = document.getElementById('userTableBody');
+                if (users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="10" class="empty-state">검색 결과가 없습니다.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = users.map((user, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${user.userId}</td>
+                        <td>${user.name}</td>
+                        <td>${user.group || '-'}</td>
+                        <td>${user.email}</td>
+                        <td>${user.phone || '-'}</td>
+                        <td>${user.department || '-'}</td>
+                        <td>${user.lastLogin || '-'}</td>
+                        <td><span class="${user.accountStatus === '사용' ? 'status-active' : 'status-inactive'}">${user.accountStatus}</span></td>
+                        <td>
+                            <button class="btn btn-edit" onclick="location.href='/user/edit/${user.id}'">수정</button>
+                            <button class="btn btn-delete" onclick="deleteUser(${user.id})">삭제</button>
+                        </td>
+                    </tr>
+                `).join('');
+            });
+    }
+
+    function deleteUser(id) {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            fetch(`/user/api/delete/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                alert('삭제 중 오류가 발생했습니다.');
+                console.error('Error:', error);
+            });
+        }
+    }
+
+    function downloadExcel() {
+        alert('엑셀 다운로드 기능은 추후 구현 예정입니다.');
+    }
+</script>
+</body>
+</html>

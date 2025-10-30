@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>안양시 스마트도시 통합센터</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Malgun Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* 배경 애니메이션 */
+        .background-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 20s infinite;
+        }
+
+        .circle:nth-child(1) { width: 80px; height: 80px; top: 10%; left: 20%; animation-delay: 0s; }
+        .circle:nth-child(2) { width: 120px; height: 120px; top: 70%; left: 80%; animation-delay: 3s; }
+        .circle:nth-child(3) { width: 100px; height: 100px; top: 40%; left: 70%; animation-delay: 7s; }
+        .circle:nth-child(4) { width: 60px; height: 60px; top: 60%; left: 10%; animation-delay: 5s; }
+        .circle:nth-child(5) { width: 90px; height: 90px; top: 20%; left: 60%; animation-delay: 10s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-50px) rotate(180deg); opacity: 1; }
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 70px 100px;
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .title {
+            font-size: 38px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 50px;
+        }
+
+        .btn-login {
+            display: inline-block;
+            padding: 20px 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 22px;
+            font-weight: 600;
+            transition: all 0.4s;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.4s;
+        }
+
+        .btn-login:hover:before {
+            left: 100%;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.7);
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .feature-icon {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+<div class="background-animation">
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+</div>
+
+<div class="container">
+    <div class="logo">🏙️</div>
+    <h1 class="title">안양시 스마트도시 통합센터</h1>
+    <p class="subtitle">Anyang Smart City Integrated Control Center</p>
+    <a href="/login" class="btn-login">관리자 로그인</a>
+
+    <div class="features">
+        <div class="feature-item">
+            <span class="feature-icon">🔐</span>
+            <span>안전한 관리</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">⚡</span>
+            <span>실시간 모니터링</span>
+        </div>
+        <div class="feature-item">
+            <span class="feature-icon">📊</span>
+            <span>데이터 분석</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

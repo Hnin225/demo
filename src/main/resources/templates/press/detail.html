@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>보도자료 상세 - 안양 스마트도시 통합센터</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; }
+
+        .top-bar {
+            background: white;
+            height: 60px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #5B7FFF;
+            text-decoration: none;
+        }
+
+        .top-menu {
+            margin-left: auto;
+            display: flex;
+            gap: 30px;
+        }
+
+        .top-menu a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: #ff5757;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .sidebar {
+            width: 200px;
+            background: white;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            padding: 0 20px 15px 20px;
+            font-size: 14px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu li a:hover {
+            background: #f0f4ff;
+            color: #5B7FFF;
+            border-right: 3px solid #5B7FFF;
+        }
+
+        .sidebar-menu li a.active {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 200px;
+            margin-top: 60px;
+            padding: 30px;
+            min-height: calc(100vh - 60px);
+        }
+
+        .content-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #5B7FFF;
+        }
+
+        .detail-header {
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .detail-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .detail-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-reserved {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-ended {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .detail-content {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+            min-height: 300px;
+            padding: 30px 0;
+            border-bottom: 2px solid #e9ecef;
+            white-space: pre-wrap;
+        }
+
+        .attachment-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .attachment-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .attachment-list {
+            list-style: none;
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .attachment-item:hover {
+            background: #f0f4ff;
+            border-color: #5B7FFF;
+        }
+
+        .attachment-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .attachment-icon {
+            font-size: 20px;
+        }
+
+        .attachment-name {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .attachment-size {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .btn-download {
+            padding: 6px 15px;
+            background: #5B7FFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-download:hover {
+            background: #4a6fe8;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-list {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-list:hover {
+            background: #5a6268;
+        }
+
+        .btn-edit {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #4a6fe8;
+        }
+
+        .btn-delete {
+            background: #ff5757;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #ff3333;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="top-bar">
+    <a href="/" class="logo">🏙️ 안양시 스마트도시 통합센터</a>
+    <div class="top-menu">
+        <a href="/">조회</a>
+        <a href="/notice/list">시민 서비스 조회/관리</a>
+        <a href="/award/list">운영 관리</a>
+        <a href="#">시설물 신고 관리</a>
+        <a href="/user/list">환경설정</a>
+        <a href="#" class="logout-btn">로그아웃</a>
+    </div>
+</div>
+
+<div class="sidebar">
+    <div class="sidebar-title">시민 서비스 조회/관리</div>
+    <ul class="sidebar-menu">
+        <li><a href="/notice/list">공지사항</a></li>
+        <li><a href="/press/list" class="active">보도자료</a></li>
+        <li><a href="/visit/list">방문사진</a></li>
+        <li><a href="/video/list">홍보영상</a></li>
+    </ul>
+</div>
+
+<div class="main-content">
+    <div class="content-box">
+        <h1 class="page-title">📰 보도자료 상세</h1>
+
+        <div class="detail-header">
+            <div style="margin-bottom: 10px;">
+                <span th:if="${press.status == '게시 중'}" class="status-badge status-active">게시 중</span>
+                <span th:if="${press.status == '예약'}" class="status-badge status-reserved">예약</span>
+                <span th:if="${press.status == '게시 종료'}" class="status-badge status-ended">게시 종료</span>
+            </div>
+
+            <h2 class="detail-title" th:text="${press.title}">보도자료 제목</h2>
+
+            <div class="detail-meta">
+                <div class="meta-item">
+                    <span>👤</span>
+                    <span th:text="${press.author != null ? press.author : '관리자'}">작성자</span>
+                </div>
+                <div class="meta-item">
+                    <span>📅</span>
+                    <span th:text="${#temporals.format(press.createdAt, 'yyyy.MM.dd HH:mm')}">작성일</span>
+                </div>
+                <div class="meta-item">
+                    <span>👁️</span>
+                    <span th:text="${press.viewCount}">0</span>
+                </div>
+                <div class="meta-item" th:if="${press.startDate != null}">
+                    <span>⏰</span>
+                    <span th:text="'게시: ' + ${#temporals.format(press.startDate, 'yyyy.MM.dd')} + ' ~ ' + ${#temporals.format(press.endDate, 'yyyy.MM.dd')}">게시기간</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-content" th:text="${press.content}">
+            보도자료 내용이 여기에 표시됩니다.
+        </div>
+
+        <div class="attachment-section" th:if="${attachments != null && !attachments.isEmpty()}">
+            <h3 class="attachment-title">📎 첨부파일 (<span th:text="${#lists.size(attachments)}">0</span>)</h3>
+            <ul class="attachment-list">
+                <li class="attachment-item" th:each="attachment : ${attachments}">
+                    <div class="attachment-info">
+                        <span class="attachment-icon">📄</span>
+                        <div>
+                            <div class="attachment-name" th:text="${attachment.fileName}">파일명</div>
+                            <div class="attachment-size" th:text="${#numbers.formatDecimal(attachment.fileSize / 1024.0, 1, 2)} + ' KB'">파일크기</div>
+                        </div>
+                    </div>
+                    <a th:href="@{/press/download/{id}(id=${attachment.id})}"
+                       class="btn-download"
+                       download>다운로드</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="btn-group">
+            <a href="/press/list" class="btn btn-list">목록으로</a>
+            <a th:href="@{/press/edit/{id}(id=${press.id})}" class="btn btn-edit">수정하기</a>
+            <button type="button" class="btn btn-delete" th:onclick="'deletePress(' + ${press.id} + ')'">삭제하기</button>
+        </div>
+    </div>
+</div>
+
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h3>게시글 삭제</h3>
+        <p style="margin: 20px 0;">게시글을 정말 삭제하시겠습니까?<br>삭제된 목록은 복구할 수 없습니다.</p>
+        <div class="modal-buttons">
+            <button class="btn btn-list" onclick="closeDeleteModal()">취소</button>
+            <button class="btn btn-delete" onclick="confirmDelete()">확인</button>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    let deleteId = null;
+
+    function deletePress(id) {
+        deleteId = id;
+        document.getElementById('deleteModal').style.display = 'block';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+        deleteId = null;
+    }
+
+    function confirmDelete() {
+        if (deleteId) {
+            fetch(`/press/api/delete/${deleteId}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                location.href = '/press/list';
+            })
+            .catch(error => {
+                alert('삭제 중 오류가 발생했습니다.');
+                console.error('Error:', error);
+            });
+        }
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('deleteModal');
+        if (event.target === modal) {
+            closeDeleteModal();
+        }
+    }
+</script>
+</body>
+</html>

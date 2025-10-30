@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 계정 수정 - 안양 스마트도시 통합센터</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .top-header {
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 0;
+        }
+
+        .top-header-content {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+            background-color: #4285f4;
+            border-radius: 5px;
+        }
+
+        .top-nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .top-nav a {
+            text-decoration: none;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .main-layout {
+            display: flex;
+            height: calc(100vh - 61px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sidebar-title {
+            background-color: #f8f9fa;
+            padding: 20px;
+            font-weight: bold;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .sidebar-menu a.active {
+            background-color: #4285f4;
+            color: white;
+            font-weight: bold;
+        }
+
+        .main-content {
+            flex: 1;
+            background-color: #fff;
+            padding: 40px 50px;
+            overflow-y: auto;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #4285f4;
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .required {
+            color: #f44336;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #4285f4;
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+        }
+
+        input:disabled {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-item input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .radio-item label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .help-text {
+            font-size: 13px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .check-message {
+            margin-top: 5px;
+            font-size: 13px;
+        }
+
+        .check-message.success {
+            color: #4CAF50;
+        }
+
+        .check-message.error {
+            color: #f44336;
+        }
+
+        .button-group {
+            margin-top: 40px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 14px 40px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit {
+            background-color: #4285f4;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background-color: #357ae8;
+        }
+
+        .btn-cancel {
+            background-color: #999;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background-color: #777;
+        }
+    </style>
+</head>
+<body>
+<div class="top-header">
+    <div class="top-header-content">
+        <div class="logo">
+            <a href="/" class="logo">🏙️ 안양시 스마트도시 통합센터</a>
+        </div>
+        <nav class="top-nav">
+            <a href="/">조회</a>
+            <a href="/notice/list">시민 서비스 조회/관리</a>
+            <a href="/award/list">운영 관리</a>
+            <a href="#">시설물 신고 관리</a>
+            <a href="/user/list">환경설정</a>
+        </nav>
+    </div>
+</div>
+
+<div class="main-layout">
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-title">환경설정</div>
+            <ul class="sidebar-menu">
+                <li><a href="/user/list" class="active">사용자 계정 관리</a></li>
+                <li><a href="#">사용자 로그인 이력 관리</a></li>
+                <li><a href="#">사용자 계정 이력 조회</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-title">
+            <span>✏️</span>
+            <h1>사용자 계정 수정</h1>
+        </div>
+
+        <div class="form-container">
+            <form id="userEditForm">
+                <input type="hidden" id="userId" th:value="${user.id}">
+
+                <!-- 아이디 (수정 불가) -->
+                <div class="form-group">
+                    <label>아이디</label>
+                    <input type="text" th:value="${user.userId}" disabled>
+                    <p class="help-text">아이디는 수정할 수 없습니다.</p>
+                </div>
+
+                <!-- 비밀번호 -->
+                <div class="form-group">
+                    <label>비밀번호</label>
+                    <input type="password" id="password" name="password"
+                           placeholder="변경하려면 새 비밀번호를 입력하세요">
+                    <p class="help-text">비밀번호를 변경하지 않으려면 비워두세요.</p>
+                </div>
+
+                <!-- 비밀번호 확인 -->
+                <div class="form-group">
+                    <label>비밀번호 확인</label>
+                    <input type="password" id="passwordConfirm" name="passwordConfirm"
+                           placeholder="비밀번호를 다시 입력하세요">
+                    <div id="passwordCheckMessage" class="check-message"></div>
+                </div>
+
+                <!-- 이름 -->
+                <div class="form-group">
+                    <label>이름 <span class="required">*</span></label>
+                    <input type="text" id="name" name="name" required
+                           th:value="${user.name}">
+                </div>
+
+                <!-- 이메일 -->
+                <div class="form-group">
+                    <label>이메일 <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required
+                           th:value="${user.email}">
+                </div>
+
+                <!-- 연락처 -->
+                <div class="form-group">
+                    <label>연락처</label>
+                    <input type="tel" id="phone" name="phone"
+                           th:value="${user.phone}">
+                </div>
+
+                <!-- 소속 부서 -->
+                <div class="form-group">
+                    <label>소속 부서</label>
+                    <input type="text" id="department" name="department"
+                           th:value="${user.department}">
+                </div>
+
+                <!-- 그룹 -->
+                <div class="form-group">
+                    <label>그룹 <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="groupNo" name="group" value="No"
+                                   th:checked="${user.group == 'No'}">
+                            <label for="groupNo">No</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="groupName" name="group" value="그룹 이름"
+                                   th:checked="${user.group == '그룹 이름'}">
+                            <label for="groupName">그룹 이름</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="groupPower" name="group" value="전력"
+                                   th:checked="${user.group == '전력'}">
+                            <label for="groupPower">전력</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="groupShip" name="group" value="선박"
+                                   th:checked="${user.group == '선박'}">
+                            <label for="groupShip">선박</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 계정 상태 -->
+                <div class="form-group">
+                    <label>계정 상태 <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="statusActive" name="accountStatus" value="사용"
+                                   th:checked="${user.accountStatus == '사용'}">
+                            <label for="statusActive">사용</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="statusInactive" name="accountStatus" value="미사용"
+                                   th:checked="${user.accountStatus == '미사용'}">
+                            <label for="statusInactive">미사용</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 버튼 그룹 -->
+                <div class="button-group">
+                    <button type="submit" class="btn btn-submit">수정 완료</button>
+                    <button type="button" class="btn btn-cancel" onclick="location.href='/user/list'">취소</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+
+<script th:inline="javascript">
+        const userId = /*[[${user.id}]]*/ '';
+        const originalUserId = /*[[${user.userId}]]*/ '';
+
+        // 비밀번호 확인
+        document.getElementById('passwordConfirm').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const passwordConfirm = this.value;
+            const messageDiv = document.getElementById('passwordCheckMessage');
+
+            if (password || passwordConfirm) {
+                if (password === passwordConfirm) {
+                    messageDiv.className = 'check-message success';
+                    messageDiv.textContent = '비밀번호가 일치합니다.';
+                } else {
+                    messageDiv.className = 'check-message error';
+                    messageDiv.textContent = '비밀번호가 일치하지 않습니다.';
+                }
+            } else {
+                messageDiv.textContent = '';
+            }
+        });
+
+        // 폼 제출
+        document.getElementById('userEditForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // 비밀번호 일치 확인 (입력된 경우에만)
+            const password = document.getElementById('password').value;
+            const passwordConfirm = document.getElementById('passwordConfirm').value;
+
+            if (password && password !== passwordConfirm) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            // 폼 데이터 수집
+            const formData = {
+                id: userId,
+                userId: originalUserId,
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                department: document.getElementById('department').value,
+                group: document.querySelector('input[name="group"]:checked').value,
+                accountStatus: document.querySelector('input[name="accountStatus"]:checked').value
+            };
+
+            // 비밀번호가 입력된 경우에만 추가
+            if (password) {
+                formData.password = password;
+            }
+
+            // 서버로 전송
+            fetch('/user/api/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('사용자 정보가 수정되었습니다.');
+                    location.href = '/user/list';
+                } else {
+                    return response.text().then(text => {
+                        alert('오류: ' + text);
+                    });
+                }
+            })
+            .catch(error => {
+                alert('수정 중 오류가 발생했습니다.');
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

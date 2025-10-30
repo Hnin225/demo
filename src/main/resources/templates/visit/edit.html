@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>방문사진 수정 - 안양 스마트도시 통합센터</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f5f7fa;
+            padding-bottom: 50px;
+        }
+
+        .top-bar {
+            background: white;
+            height: 60px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #5B7FFF;
+            text-decoration: none;
+        }
+
+        .top-menu {
+            margin-left: auto;
+            display: flex;
+            gap: 30px;
+        }
+
+        .top-menu a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: #ff5757;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .sidebar {
+            width: 200px;
+            background: white;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            padding: 0 20px 15px 20px;
+            font-size: 14px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu li a:hover {
+            background: #f0f4ff;
+            color: #5B7FFF;
+            border-right: 3px solid #5B7FFF;
+        }
+
+        .sidebar-menu li a.active {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 200px;
+            margin-top: 60px;
+            padding: 30px;
+            min-height: calc(100vh - 60px);
+        }
+
+        .content-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #5B7FFF;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .required {
+            color: #ff5757;
+            margin-left: 3px;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #5B7FFF;
+        }
+
+        .form-textarea {
+            min-height: 300px;
+            resize: vertical;
+        }
+
+        .form-text {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .current-files {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .current-file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload-area:hover {
+            border-color: #5B7FFF;
+            background: #f0f4ff;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-list {
+            margin-top: 15px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 8px;
+        }
+
+        .file-item-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-remove {
+            background: #ff5757;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .file-remove:hover {
+            background: #ff3333;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 40px;
+            padding: 20px 0;
+        }
+
+        .btn {
+            padding: 14px 40px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #5B7FFF;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4a6fe8;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+<div class="top-bar">
+    <a href="/" class="logo">🏙️ 안양시 스마트도시 통합센터</a>
+    <div class="top-menu">
+        <a href="/">조회</a>
+        <a href="/notice/list">시민 서비스 조회/관리</a>
+        <a href="/award/list">운영 관리</a>
+        <a href="#">시설물 신고 관리</a>
+        <a href="/user/list">환경설정</a>
+        <a href="#" class="logout-btn">로그아웃</a>
+    </div>
+</div>
+
+<div class="sidebar">
+    <div class="sidebar-title">시민 서비스 조회/관리</div>
+    <ul class="sidebar-menu">
+        <li><a href="/notice/list">공지사항</a></li>
+        <li><a href="/press/list">보도자료</a></li>
+        <li><a href="/visit/list" class="active">방문사진</a></li>
+        <li><a href="/video/list">홍보영상</a></li>
+    </ul>
+</div>
+
+<div class="main-content">
+    <div class="content-box">
+        <h1 class="page-title">✏️ 방문사진 수정</h1>
+
+        <form id="visitForm" enctype="multipart/form-data">
+            <input type="hidden" id="visitId" name="id" th:value="${visit.id}">
+
+            <!-- 제목 -->
+            <div class="form-group">
+                <label class="form-label">제목<span class="required">*</span></label>
+                <input type="text"
+                       class="form-input"
+                       id="title"
+                       name="title"
+                       required
+                       maxlength="200"
+                       th:value="${visit.title}">
+            </div>
+
+            <!-- 내용 -->
+            <div class="form-group">
+                <label class="form-label">내용<span class="required">*</span></label>
+                <textarea class="form-textarea"
+                          id="content"
+                          name="content"
+                          required
+                          th:text="${visit.content}"></textarea>
+            </div>
+
+            <!-- 작성자 -->
+            <div class="form-group">
+                <label class="form-label">작성자</label>
+                <input type="text"
+                       class="form-input"
+                       id="author"
+                       name="author"
+                       th:value="${visit.author}">
+            </div>
+
+            <!-- 게시 기간 -->
+            <div class="form-group">
+                <label class="form-label">게시 시작일<span class="required">*</span></label>
+                <input type="datetime-local"
+                       class="form-input"
+                       id="startDate"
+                       name="startDate"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">게시 종료일<span class="required">*</span></label>
+                <input type="datetime-local"
+                       class="form-input"
+                       id="endDate"
+                       name="endDate"
+                       required>
+            </div>
+
+            <!-- 상단 고정 -->
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox"
+                           class="checkbox-input"
+                           id="pinned"
+                           name="pinned"
+                           th:checked="${visit.pinned}">
+                    <label for="pinned">상단 고정 게시글로 설정</label>
+                </div>
+            </div>
+
+            <!-- 기존 첨부파일 -->
+            <div class="form-group" th:if="${attachments != null && !attachments.isEmpty()}">
+                <label class="form-label">기존 첨부파일</label>
+                <div class="current-files">
+                    <div class="current-file-item" th:each="attachment : ${attachments}">
+                        <div>
+                            <span th:text="${attachment.fileName}"></span>
+                            <span style="font-size: 12px; color: #999; margin-left: 10px;"
+                                  th:text="'(' + ${#numbers.formatDecimal(attachment.fileSize / 1024.0, 1, 2)} + ' KB)'"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 새 첨부파일 -->
+            <div class="form-group">
+                <label class="form-label">새 첨부파일 추가 (최대 5개, 총 90MB)</label>
+                <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
+                    <p>📁 파일을 선택하거나 드래그하세요</p>
+                    <p style="font-size: 12px; color: #999; margin-top: 10px;">
+                        jpg, jpeg, png, svg, gif, hwp, doc, docx, pdf, ppt, pptx, txt, xls, xlsx, gz, zip
+                    </p>
+                </div>
+                <input type="file"
+                       id="fileInput"
+                       name="files"
+                       multiple
+                       accept=".jpg,.jpeg,.png,.svg,.gif,.hwp,.doc,.docx,.pdf,.ppt,.pptx,.txt,.xls,.xlsx,.gz,.zip"
+                       class="file-input"
+                       onchange="handleFileSelect(event)">
+                <div id="fileList" class="file-list"></div>
+            </div>
+
+            <!-- 버튼 그룹 -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="location.href='/visit/list'">취소</button>
+                <button type="submit" class="btn btn-primary">수정 완료</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    let selectedFiles = [];
+
+    window.onload = function() {
+        const startDate = /*[[${visit.startDate}]]*/ null;
+        const endDate = /*[[${visit.endDate}]]*/ null;
+
+        if (startDate) {
+            document.getElementById('startDate').value = formatDateForInput(startDate);
+        }
+        if (endDate) {
+            document.getElementById('endDate').value = formatDateForInput(endDate);
+        }
+    };
+
+    function formatDateForInput(dateString) {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+
+    function handleFileSelect(event) {
+        const files = Array.from(event.target.files);
+
+        if (selectedFiles.length + files.length > 5) {
+            alert('최대 5개의 첨부파일만 업로드 가능합니다.');
+            event.target.value = '';
+            return;
+        }
+
+        let totalSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
+        totalSize += files.reduce((sum, file) => sum + file.size, 0);
+
+        if (totalSize > 90 * 1024 * 1024) {
+            alert('총 90MB의 파일을 업로드 할 수 없습니다.');
+            event.target.value = '';
+            return;
+        }
+
+        selectedFiles = selectedFiles.concat(files);
+        displayFileList();
+        event.target.value = '';
+    }
+
+    function displayFileList() {
+        const fileListDiv = document.getElementById('fileList');
+        fileListDiv.innerHTML = '';
+
+        selectedFiles.forEach((file, index) => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+
+            const fileInfo = document.createElement('div');
+            fileInfo.className = 'file-item-info';
+            fileInfo.innerHTML = `<span>📎 ${file.name}</span>`;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'file-remove';
+            removeBtn.textContent = '삭제';
+            removeBtn.type = 'button';
+            removeBtn.onclick = () => removeFile(index);
+
+            fileItem.appendChild(fileInfo);
+            fileItem.appendChild(removeBtn);
+            fileListDiv.appendChild(fileItem);
+        });
+    }
+
+    function removeFile(index) {
+        selectedFiles.splice(index, 1);
+        displayFileList();
+    }
+
+    document.getElementById('visitForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('id', document.getElementById('visitId').value);
+        formData.append('title', document.getElementById('title').value);
+        formData.append('content', document.getElementById('content').value);
+        formData.append('author', document.getElementById('author').value);
+        formData.append('startDate', document.getElementById('startDate').value);
+        formData.append('endDate', document.getElementById('endDate').value);
+        formData.append('pinned', document.getElementById('pinned').checked);
+
+        selectedFiles.forEach(file => {
+            formData.append('files', file);
+        });
+
+        fetch('/visit/api/save', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => {
+                    throw new Error(text);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('방문사진이 수정되었습니다.');
+            location.href = '/visit/list';
+        })
+        .catch(error => {
+            alert('수정 중 오류가 발생했습니다:\n' + error.message);
+            console.error('Error:', error);
+        });
+    });
+</script>
+</body>
+</html>
