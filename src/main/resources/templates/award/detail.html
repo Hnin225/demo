@@ -2,262 +2,569 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>연도별 수상 이력 상세</title>
+    <title>연도별 수상 이력 상세 - 안양 스마트도시 통합센터</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', 'Malgun Gothic', Arial, sans-serif; background: #f5f7fa; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-        .top-bar {
-            background: white;
-            height: 60px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            padding: 0 30px;
+        /* IT 애니메이션 배경 */
+        .bg-decoration {
             position: fixed;
+            width: 100%;
+            height: 100%;
             top: 0;
             left: 0;
-            right: 0;
-            z-index: 100;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
         }
+
+        .grid-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(42, 82, 152, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(42, 82, 152, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .bg-circle1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(30, 60, 114, 0.4) 0%, transparent 70%);
+            top: -100px;
+            right: 10%;
+            animation-delay: 0s;
+        }
+
+        .bg-circle2 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(42, 82, 152, 0.3) 0%, transparent 70%);
+            bottom: 10%;
+            left: 10%;
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* 상단바 */
+        .top-bar {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            height: 70px;
+            box-shadow: 0 4px 20px rgba(30, 60, 114, 0.3);
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
         .logo {
             font-size: 20px;
-            font-weight: bold;
-            color: #5B7FFF;
+            font-weight: 700;
+            color: white;
             text-decoration: none;
-            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             transition: all 0.3s;
+            cursor: pointer;
         }
-        .logo:hover { transform: scale(1.05); }
 
-        .top-menu { margin-left: auto; display: flex; gap: 30px; }
-        .top-menu a { text-decoration: none; color: #666; font-weight: 500; }
-        .logout-btn { padding: 8px 20px; background: #ff5757; color: white; border-radius: 5px; }
+        .logo:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
 
+        .logo-icon {
+            font-size: 28px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 10px;
+        }
+
+        .top-menu {
+            margin-left: auto;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .top-menu a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .top-menu a:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .logout-btn {
+            padding: 10px 25px !important;
+            background: rgba(255, 87, 87, 0.2) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 87, 87, 0.3) !important;
+            border-radius: 10px !important;
+            margin-left: 10px;
+        }
+
+        /* 사이드바 */
         .sidebar {
-            width: 200px;
-            background: white;
+            width: 250px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             position: fixed;
             left: 0;
-            top: 60px;
+            top: 70px;
             bottom: 0;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-            padding: 20px 0;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+            padding: 30px 0;
+            overflow-y: auto;
+            z-index: 100;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .sidebar-title { padding: 0 20px 15px 20px; font-size: 14px; color: #999; font-weight: 600; }
-        .sidebar-menu { list-style: none; }
-        .sidebar-menu li a { display: block; padding: 12px 20px; text-decoration: none; color: #333; }
-        .sidebar-menu li a.active { background: #5B7FFF; color: white; }
 
-        .main-content { margin-left: 200px; margin-top: 60px; padding: 30px; }
-        .content-box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .page-title { font-size: 24px; color: #333; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #5B7FFF; }
-
-        .detail-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+        .sidebar-title {
+            padding: 0 25px 20px 25px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
         }
-        .detail-section h3 {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 15px;
+
+        .sidebar-title:first-child {
+            margin-top: 0;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li a {
             display: flex;
             align-items: center;
             gap: 10px;
+            padding: 15px 25px;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s;
+            font-weight: 500;
+            border-left: 3px solid transparent;
         }
+
+        .sidebar-menu li a:hover {
+            background: rgba(42, 82, 152, 0.2);
+            color: white;
+            border-left-color: #2a5298;
+            padding-left: 30px;
+        }
+
+        .sidebar-menu li a.active {
+            background: linear-gradient(90deg, rgba(42, 82, 152, 0.3), transparent);
+            color: white;
+            border-left-color: #2a5298;
+            font-weight: 600;
+        }
+
+        /* 메인 컨텐츠 */
+        .main-content { 
+            margin-left: 250px; 
+            margin-top: 70px; 
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content-box { 
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .page-title { 
+            font-size: 28px;
+            color: white;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(42, 82, 152, 0.5);
+            text-shadow: 0 0 20px rgba(42, 82, 152, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .detail-section {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .detail-section h3 {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
         .detail-section .number {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 32px;
-            height: 32px;
-            background: #4ade80;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             border-radius: 50%;
             font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(42, 82, 152, 0.3);
         }
+        
         .detail-content {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
         }
 
         .award-item {
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.03);
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 15px;
             cursor: pointer;
             transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        
         .award-item:hover {
-            background: #e9ecef;
+            background: rgba(42, 82, 152, 0.1);
+            border-color: rgba(42, 82, 152, 0.3);
         }
+        
         .award-item-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
         }
+        
         .award-title {
             font-size: 16px;
             font-weight: 600;
-            color: #333;
+            color: white;
         }
+        
         .award-amount {
             font-size: 14px;
-            color: #666;
+            color: rgba(255, 255, 255, 0.6);
         }
+        
         .award-toggle {
             font-size: 20px;
-            color: #999;
+            color: #60a5fa;
+            transition: all 0.3s;
         }
+        
         .award-details {
             display: none;
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+        
         .award-details.active {
             display: block;
         }
+        
         .award-image {
             max-width: 100%;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
         }
 
-        .btn-group { margin-top: 30px; display: flex; justify-content: space-between; }
-        .btn { padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-size: 15px; font-weight: 600; text-decoration: none; display: inline-block; }
-        .btn-delete { background: #dc3545; color: white; }
-        .btn-edit { background: #5B7FFF; color: white; }
-        .btn-list { background: #6c757d; color: white; }
+        .award-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 30px rgba(42, 82, 152, 0.4);
+        }
 
-        /* 이미지 팝업 */
+        .btn-group { 
+            margin-top: 40px; 
+            display: flex; 
+            justify-content: space-between;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn { 
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        
+        .btn-delete { 
+            background: rgba(255, 87, 87, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(255, 87, 87, 0.3);
+            margin-right: 10px;
+        }
+
+        .btn-delete:hover {
+            background: rgba(255, 87, 87, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 87, 87, 0.3);
+        }
+        
+        .btn-edit { 
+            background: rgba(42, 82, 152, 0.2);
+            color: #7dd3fc;
+            border: 1px solid rgba(42, 82, 152, 0.3);
+        }
+
+        .btn-edit:hover {
+            background: rgba(42, 82, 152, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(42, 82, 152, 0.3);
+        }
+        
+        .btn-list { 
+            background: rgba(108, 117, 125, 0.3);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-list:hover {
+            background: rgba(108, 117, 125, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* 이미지 팝업 모달 */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 2000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
         }
+        
         .modal.active {
             display: flex;
             justify-content: center;
             align-items: center;
         }
+        
         .modal-content {
             max-width: 90%;
             max-height: 90%;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
+        
         .close {
             position: absolute;
             top: 20px;
             right: 40px;
             color: white;
-            font-size: 40px;
+            font-size: 50px;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .close:hover {
+            color: #2a5298;
+            text-shadow: 0 0 20px rgba(42, 82, 152, 0.8);
+        }
+
+        /* 스크롤바 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(42, 82, 152, 0.5);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(42, 82, 152, 0.7);
         }
     </style>
 </head>
 <body>
-<div class="top-bar">
-    <a href="/" class="logo">🏙️ 안양시 스마트도시 통합센터</a>
-    <div class="top-menu">
-        <a href="/dashboard">조회</a>
-        <a href="/notice/list">시민 서비스 조회/관리</a>
-        <a href="#">운영 관리</a>
-        <a href="#">시설물 신고 관리</a>
-        <a href="#">환경설정</a>
-        <a href="/" class="logout-btn">로그아웃</a>
+    <!-- IT 애니메이션 배경 -->
+    <div class="bg-decoration">
+        <div class="grid-background"></div>
+        <div class="bg-circle bg-circle1"></div>
+        <div class="bg-circle bg-circle2"></div>
     </div>
-</div>
 
-<div class="sidebar">
-    <div class="sidebar-title">운영 관리</div>
-    <ul class="sidebar-menu">
-        <li><a href="#">운영 실적 통계</a></li>
-        <li><a href="/award/list" class="active">연도별 수상 이력</a></li>
-        <li><a href="#">방문 국가 관리</a></li>
-        <li><a href="#">방문 사진 관리</a></li>
-        <li><a href="#">조직도 관리</a></li>
-    </ul>
-</div>
-
-<div class="main-content">
-    <div class="content-box">
-        <h1 class="page-title">🏆 연도별 수상 이력</h1>
-
-        <div class="detail-section">
-            <h3><span class="number">1</span><span th:text="${award.year} + ' 수상 내역'"></span></h3>
-        </div>
-
-        <div class="detail-section">
-            <h3><span class="number">2</span>제목</h3>
-            <div class="detail-content" th:text="${award.description}">제목입니다.</div>
-        </div>
-
-        <div class="detail-section">
-            <h3><span class="number">3</span>첨부파일</h3>
-            <div class="detail-content">
-                <span th:text="${award.attachmentPath}">첨부파일명.jpg</span>
-            </div>
-        </div>
-
-        <div class="detail-section">
-            <h3><span class="number">4</span><span th:text="${award.year} + ' 내역'"></span></h3>
-            <div>
-                <!-- 예시 수상 내역 (실제로는 awards 필드를 파싱해서 표시) -->
-                <div class="award-item" onclick="toggleAward(this)">
-                    <div class="award-item-header">
-                        <span class="award-title">2024년 대한민국 지방자치단체 행정대상 종합대상 수상</span>
-                        <span class="award-amount">업로드일: 0000.00.00 00:00</span>
-                        <span class="award-toggle">▼</span>
-                    </div>
-                    <div class="award-details">
-                        <img src="/images/sample.jpg" alt="수상 이미지" class="award-image" onclick="openModal(this.src)">
-                    </div>
-                </div>
-
-                <div class="award-item" onclick="toggleAward(this)">
-                    <div class="award-item-header">
-                        <span class="award-title">2024년 월드 스마트시티 엑스포 스마트시티상 수상</span>
-                        <span class="award-amount">업로드일: 0000.00.00</span>
-                        <span class="award-toggle">▼</span>
-                    </div>
-                    <div class="award-details">
-                        <img src="/images/sample.jpg" alt="수상 이미지" class="award-image" onclick="openModal(this.src)">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="btn-group">
-            <div>
-                <a th:href="@{/award/delete/{id}(id=${award.id})}"
-                   class="btn btn-delete"
-                   onclick="return confirm('정말 삭제하시겠습니까?')">삭제하기</a>
-                <a th:href="@{/award/edit/{id}(id=${award.id})}" class="btn btn-edit">수정하기</a>
-            </div>
-            <a href="/award/list" class="btn btn-list">목록으로</a>
+    <!-- 상단바 -->
+    <div class="top-bar">
+        <a href="/" class="logo">
+            <span class="logo-icon">🏙️</span>
+            <span>안양시 스마트도시 통합센터</span>
+        </a>
+        <div class="top-menu">
+            <a href="/dashboard">조회</a>
+            <a href="/notice/list">시민 서비스 조회/관리</a>
+            <a href="/award/list">운영 관리</a>
+            <a href="#">시설물 신고 관리</a>
+            <a href="/user/list">환경설정</a>
+            <a href="/" class="logout-btn">로그아웃</a>
         </div>
     </div>
-</div>
 
-<!-- 이미지 팝업 모달 -->
-<div id="imageModal" class="modal" onclick="closeModal()">
-    <span class="close">&times;</span>
-    <img class="modal-content" id="modalImage">
-</div>
+    <!-- 사이드바 -->
+    <div class="sidebar">
+        <div class="sidebar-title">시민 서비스 조회/관리</div>
+        <ul class="sidebar-menu">
+            <li><a href="/notice/list">📢 공지사항</a></li>
+            <li><a href="/press/list">📰 보도자료</a></li>
+            <li><a href="/visit/list">📷 방문사진</a></li>
+            <li><a href="/video/list">🎥 홍보영상</a></li>
+        </ul>
 
-<script>
+        <div class="sidebar-title">운영 관리</div>
+        <ul class="sidebar-menu">
+            <li><a href="/stats/list">📊 운영 실적 통계</a></li>
+            <li><a href="/award/list" class="active">🏆 연도별 수상 이력</a></li>
+            <li><a href="/country/list">🌍 방문 국가 관리</a></li>
+            <li><a href="/schedule/list">📅 방문 사전 관리</a></li>
+            <li><a href="/org/list">🏢 조직도 관리</a></li>
+        </ul>
+    </div>
+
+    <!-- 메인 컨텐츠 -->
+    <div class="main-content">
+        <div class="content-box">
+            <h1 class="page-title">🏆 연도별 수상 이력 상세</h1>
+
+            <div class="detail-section">
+                <h3><span class="number">1</span><span th:text="${award.year} + '년 수상 내역'"></span></h3>
+            </div>
+
+            <div class="detail-section">
+                <h3><span class="number">2</span>제목</h3>
+                <div class="detail-content" th:text="${award.title}">제목입니다.</div>
+            </div>
+
+            <div class="detail-section">
+                <h3><span class="number">3</span>첨부파일</h3>
+                <div class="detail-content">
+                    <span th:text="${award.imageFileName != null ? award.imageFileName : '첨부파일 없음'}">첨부파일명.jpg</span>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3><span class="number">4</span><span th:text="${award.year} + '년 내역'"></span></h3>
+                <div>
+                    <!-- 수상 내역 아이템 -->
+                    <div class="award-item" onclick="toggleAward(this)">
+                        <div class="award-item-header">
+                            <span class="award-title" th:text="${award.title}">2024년 대한민국 지방자치단체 행정대상 종합대상 수상</span>
+                            <span class="award-amount" th:text="'업로드일: ' + ${#temporals.format(award.createdAt, 'yyyy.MM.dd HH:mm')}">업로드일: 0000.00.00 00:00</span>
+                            <span class="award-toggle">▼</span>
+                        </div>
+                        <div class="award-details">
+                            <img th:if="${award.imageFilePath}"
+                                 th:src="'/' + ${award.imageFilePath}" 
+                                 alt="수상 이미지" 
+                                 class="award-image" 
+                                 onclick="openModal(this.src, event)">
+                            <p th:unless="${award.imageFilePath}" style="color: rgba(255,255,255,0.6); padding: 20px; text-align: center;">
+                                이미지가 등록되지 않았습니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <div>
+                    <a th:href="@{/award/delete/{id}(id=${award.id})}"
+                       class="btn btn-delete"
+                       onclick="return confirm('정말 삭제하시겠습니까?')">삭제하기</a>
+                    <a th:href="@{/award/edit/{id}(id=${award.id})}" class="btn btn-edit">수정하기</a>
+                </div>
+                <a href="/award/list" class="btn btn-list">목록으로</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 이미지 팝업 모달 -->
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
         function toggleAward(element) {
             const details = element.querySelector('.award-details');
             const toggle = element.querySelector('.award-toggle');
@@ -271,8 +578,10 @@
             }
         }
 
-        function openModal(src) {
-            event.stopPropagation();
+        function openModal(src, event) {
+            if (event) {
+                event.stopPropagation();
+            }
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
             modal.classList.add('active');
@@ -283,6 +592,13 @@
             const modal = document.getElementById('imageModal');
             modal.classList.remove('active');
         }
+
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
