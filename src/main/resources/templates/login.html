@@ -11,119 +11,415 @@
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7474bf 100%);
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
+        /* 배경 애니메이션 */
+        .bg-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-animation .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .circle1 {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .circle2 {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .circle3 {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        .circle4 {
+            width: 150px;
+            height: 150px;
+            top: 30%;
+            right: 25%;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-30px) rotate(180deg);
+                opacity: 0.6;
+            }
+        }
+
+        /* 로그인 컨테이너 */
         .login-container {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             padding: 50px 60px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             width: 450px;
+            position: relative;
+            z-index: 1;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 로고 */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .logo {
-            text-align: center;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             font-size: 36px;
-            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(42, 82, 152, 0.4);
+            animation: pulse 2s ease-in-out infinite;
         }
 
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* 제목 */
         .title {
             text-align: center;
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 26px;
+            font-weight: 700;
             color: #333;
-            margin-bottom: 40px;
+            margin-bottom: 35px;
         }
 
+        /* 폼 그룹 */
         .form-group {
             margin-bottom: 25px;
+            position: relative;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
             color: #333;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #999;
+            transition: all 0.3s;
         }
 
         .form-group input {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
             transition: all 0.3s;
+            background: #f8f9fa;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #5B7FFF;
+            border-color: #2a5298;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(42, 82, 152, 0.1);
         }
 
+        .form-group input:focus + .input-icon {
+            color: #2a5298;
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        /* 로그인 버튼 */
         .btn-submit {
             width: 100%;
             padding: 16px;
-            background: #5B7FFF;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 18px;
+            border-radius: 12px;
+            font-size: 17px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             margin-top: 10px;
+            box-shadow: 0 8px 20px rgba(42, 82, 152, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-submit:hover::before {
+            width: 400px;
+            height: 400px;
         }
 
         .btn-submit:hover {
-            background: #4a6fe8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(91, 127, 255, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(42, 82, 152, 0.5);
         }
 
+        .btn-submit:active {
+            transform: translateY(-1px);
+        }
+
+        /* 뒤로가기 링크 */
         .back-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
         .back-link a {
             color: #666;
             text-decoration: none;
             font-size: 14px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .back-link a:hover {
-            color: #5B7FFF;
+            color: #2a5298;
+            transform: translateX(-3px);
+        }
+
+        /* 보안 배지 */
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(42, 82, 152, 0.05);
+            border-radius: 10px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .security-icon {
+            font-size: 16px;
+        }
+
+        /* 스마트시티 장식 */
+        .city-decoration {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 150px;
+            background: linear-gradient(to top, rgba(42, 82, 152, 0.2), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .building {
+            position: absolute;
+            bottom: 0;
+            width: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px 6px 0 0;
+            animation: buildingGlow 3s ease-in-out infinite;
+        }
+
+        .building1 {
+            left: 15%;
+            height: 70px;
+            animation-delay: 0s;
+        }
+
+        .building2 {
+            left: 30%;
+            height: 100px;
+            animation-delay: 0.5s;
+        }
+
+        .building3 {
+            right: 30%;
+            height: 85px;
+            animation-delay: 1s;
+        }
+
+        .building4 {
+            right: 15%;
+            height: 75px;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes buildingGlow {
+            0%, 100% {
+                opacity: 0.3;
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            }
+            50% {
+                opacity: 0.6;
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .login-container {
+                width: 90%;
+                padding: 40px 30px;
+            }
+
+            .title {
+                font-size: 22px;
+            }
         }
     </style>
 </head>
 <body>
+<!-- 배경 애니메이션 -->
+<div class="bg-animation">
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+    <div class="circle circle3"></div>
+    <div class="circle circle4"></div>
+</div>
+
+<!-- 스마트시티 장식 -->
+<div class="city-decoration">
+    <div class="building building1"></div>
+    <div class="building building2"></div>
+    <div class="building building3"></div>
+    <div class="building building4"></div>
+</div>
+
+<!-- 로그인 컨테이너 -->
 <div class="login-container">
-    <div class="logo">🏙️</div>
+    <div class="logo-container">
+        <div class="logo">🏙️</div>
+    </div>
+
     <h1 class="title">관리자 로그인</h1>
 
     <form method="post" action="/login">
         <div class="form-group">
             <label>아이디</label>
-            <input type="text" name="username" required placeholder="아이디를 입력하세요">
+            <div class="input-wrapper">
+                <input type="text" name="username" required placeholder="아이디를 입력하세요" autocomplete="username">
+                <span class="input-icon">👤</span>
+            </div>
         </div>
 
         <div class="form-group">
             <label>비밀번호</label>
-            <input type="password" name="password" required placeholder="비밀번호를 입력하세요">
+            <div class="input-wrapper">
+                <input type="password" name="password" required placeholder="비밀번호를 입력하세요" autocomplete="current-password">
+                <span class="input-icon">🔒</span>
+            </div>
         </div>
 
         <button type="submit" class="btn-submit">로그인</button>
     </form>
 
+    <div class="security-badge">
+        <span class="security-icon">🛡️</span>
+        <span>보안 연결로 안전하게 보호됩니다</span>
+    </div>
+
     <div class="back-link">
         <a href="/">← 메인으로 돌아가기</a>
     </div>
 </div>
+
+<script>
+        // 입력 필드 포커스 애니메이션
+        document.querySelectorAll('.form-group input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.parentElement.style.transform = 'scale(1.02)';
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.parentElement.style.transform = 'scale(1)';
+            });
+        });
+
+        // 폼 제출 시 버튼 애니메이션
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const btn = document.querySelector('.btn-submit');
+            btn.textContent = '로그인 중...';
+            btn.style.background = 'linear-gradient(135deg, #1a3461 0%, #234481 100%)';
+        });
+    </script>
 </body>
 </html>
