@@ -6,69 +6,163 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f5f7fa;
-            padding-bottom: 50px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        .top-bar {
-            background: white;
-            height: 60px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            padding: 0 30px;
+        /* IT 애니메이션 배경 */
+        .bg-decoration {
             position: fixed;
+            width: 100%;
+            height: 100%;
             top: 0;
             left: 0;
-            right: 0;
-            z-index: 100;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+        }
+
+        .grid-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(42, 82, 152, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(42, 82, 152, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .bg-circle1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(30, 60, 114, 0.4) 0%, transparent 70%);
+            top: -100px;
+            right: 10%;
+        }
+
+        .bg-circle2 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(42, 82, 152, 0.3) 0%, transparent 70%);
+            bottom: 10%;
+            left: 10%;
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* 상단바 */
+        .top-bar {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            height: 70px;
+            box-shadow: 0 4px 20px rgba(30, 60, 114, 0.3);
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
         .logo {
             font-size: 20px;
-            font-weight: bold;
-            color: #5B7FFF;
+            font-weight: 700;
+            color: white;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 10px;
         }
 
         .top-menu {
             margin-left: auto;
             display: flex;
-            gap: 30px;
+            gap: 10px;
+            align-items: center;
         }
 
         .top-menu a {
             text-decoration: none;
-            color: #666;
-            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .top-menu a:hover {
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .logout-btn {
-            padding: 8px 20px;
-            background: #ff5757;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
+            padding: 10px 25px !important;
+            background: rgba(255, 87, 87, 0.2) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 87, 87, 0.3) !important;
+            border-radius: 10px !important;
+            margin-left: 10px;
         }
 
+        /* 사이드바 */
         .sidebar {
-            width: 200px;
-            background: white;
+            width: 250px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             position: fixed;
             left: 0;
-            top: 60px;
+            top: 70px;
             bottom: 0;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-            padding: 20px 0;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+            padding: 30px 0;
             overflow-y: auto;
+            z-index: 100;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar-title {
-            padding: 0 20px 15px 20px;
-            font-size: 14px;
-            color: #999;
+            padding: 0 25px 20px 25px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .sidebar-menu {
@@ -76,75 +170,104 @@
         }
 
         .sidebar-menu li a {
-            display: block;
-            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 25px;
             text-decoration: none;
-            color: #333;
+            color: rgba(255, 255, 255, 0.8);
             transition: all 0.3s;
+            font-weight: 500;
+            border-left: 3px solid transparent;
         }
 
         .sidebar-menu li a:hover {
-            background: #f0f4ff;
-            color: #5B7FFF;
-            border-right: 3px solid #5B7FFF;
+            background: rgba(42, 82, 152, 0.2);
+            color: white;
+            border-left-color: #2a5298;
+            padding-left: 30px;
         }
 
         .sidebar-menu li a.active {
-            background: #5B7FFF;
+            background: linear-gradient(90deg, rgba(42, 82, 152, 0.3), transparent);
             color: white;
+            border-left-color: #2a5298;
+            font-weight: 600;
         }
 
+        /* 메인 컨텐츠 */
         .main-content {
-            margin-left: 200px;
-            margin-top: 60px;
-            padding: 30px;
-            min-height: calc(100vh - 60px);
+            margin-left: 250px;
+            margin-top: 70px;
+            padding: 40px;
+            min-height: calc(100vh - 70px);
+            position: relative;
+            z-index: 1;
         }
 
         .content-box {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 1000px;
+            margin: 0 auto 30px auto;
         }
 
         .page-title {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #5B7FFF;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(42, 82, 152, 0.5);
+            text-shadow: 0 0 20px rgba(42, 82, 152, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
+        /* 폼 스타일 */
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
-            color: #333;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
         }
 
         .required {
-            color: #ff5757;
-            margin-left: 3px;
+            color: #f87171;
+            margin-left: 5px;
         }
 
         .form-input, .form-select, .form-textarea {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 14px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
             font-size: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
             font-family: inherit;
         }
 
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
-            border-color: #5B7FFF;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .form-textarea {
@@ -153,36 +276,58 @@
         }
 
         .form-text {
-            margin-top: 5px;
-            font-size: 12px;
-            color: #999;
+            margin-top: 8px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
         }
 
         .checkbox-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .checkbox-input {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #2a5298;
+        }
+
+        .checkbox-group label {
+            color: rgba(255, 255, 255, 0.8);
             cursor: pointer;
         }
 
+        /* 파일 업로드 */
         .file-upload-area {
-            border: 2px dashed #ddd;
-            border-radius: 8px;
-            padding: 30px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 40px;
             text-align: center;
-            background: #f8f9fa;
+            background: rgba(255, 255, 255, 0.03);
             cursor: pointer;
             transition: all 0.3s;
         }
 
         .file-upload-area:hover {
-            border-color: #5B7FFF;
-            background: #f0f4ff;
+            border-color: #2a5298;
+            background: rgba(42, 82, 152, 0.1);
+        }
+
+        .file-upload-area p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+        }
+
+        .file-upload-area p:last-child {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 10px;
         }
 
         .file-input {
@@ -190,374 +335,442 @@
         }
 
         .file-list {
-            margin-top: 15px;
+            margin-top: 20px;
         }
 
         .file-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 8px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 10px;
         }
 
         .file-item-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .file-remove {
-            background: #ff5757;
-            color: white;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 3px;
+            background: rgba(255, 87, 87, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(255, 87, 87, 0.3);
+            padding: 6px 15px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
         }
 
         .file-remove:hover {
-            background: #ff3333;
+            background: rgba(255, 87, 87, 0.3);
+            transform: translateY(-2px);
         }
 
+        /* 버튼 그룹 */
         .btn-group {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
             margin-top: 40px;
-            padding: 20px 0;
+            padding: 30px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .btn {
             padding: 14px 40px;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 15px;
             font-weight: 600;
             transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .btn-primary {
-            background: #5B7FFF;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
         }
 
         .btn-primary:hover {
-            background: #4a6fe8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(42, 82, 152, 0.5);
         }
 
         .btn-secondary {
-            background: #6c757d;
+            background: rgba(108, 117, 125, 0.3);
             color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .btn-secondary:hover {
-            background: #5a6268;
+            background: rgba(108, 117, 125, 0.5);
+            transform: translateY(-2px);
         }
 
+        /* 모달 */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
+            z-index: 2000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
         }
 
         .modal-content {
-            background-color: white;
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(20px);
             margin: 15% auto;
-            padding: 30px;
-            border-radius: 10px;
-            width: 400px;
+            padding: 40px;
+            border-radius: 20px;
+            width: 450px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .modal-content p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
         }
 
         .modal-buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 30px;
+        }
+
+        /* 스크롤바 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(42, 82, 152, 0.5);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(42, 82, 152, 0.7);
         }
     </style>
 </head>
 <body>
-<div class="top-bar">
-    <a href="/" class="logo">🏙️ 안양시 스마트도시 통합센터</a>
-    <div class="top-menu">
-        <a href="/">조회</a>
-        <a href="/notice/list">시민 서비스 조회/관리</a>
-        <a href="/award/list">운영 관리</a>
-        <a href="#">시설물 신고 관리</a>
-        <a href="/user/list">환경설정</a>
-        <a href="#" class="logout-btn">로그아웃</a>
+    <!-- IT 애니메이션 배경 -->
+    <div class="bg-decoration">
+        <div class="grid-background"></div>
+        <div class="bg-circle bg-circle1"></div>
+        <div class="bg-circle bg-circle2"></div>
     </div>
-</div>
 
-<div class="sidebar">
-    <div class="sidebar-title">시민 서비스 조회/관리</div>
-    <ul class="sidebar-menu">
-        <li><a href="/notice/list">공지사항</a></li>
-        <li><a href="/press/list">보도자료</a></li>
-        <li><a href="/visit/list">방문사진</a></li>
-        <li><a href="/video/list" class="active">홍보영상</a></li>
-    </ul>
-</div>
-
-<div class="main-content">
-    <div class="content-box">
-        <h1 class="page-title">📝 홍보영상 작성</h1>
-
-        <form id="videoForm" enctype="multipart/form-data">
-            <!-- 제목 -->
-            <div class="form-group">
-                <label class="form-label">제목<span class="required">*</span></label>
-                <input type="text"
-                       class="form-input"
-                       id="title"
-                       name="title"
-                       required
-                       maxlength="200"
-                       placeholder="제목을 입력하세요">
-            </div>
-
-            <!-- 내용 -->
-            <div class="form-group">
-                <label class="form-label">내용<span class="required">*</span></label>
-                <textarea class="form-textarea"
-                          id="content"
-                          name="content"
-                          required
-                          placeholder="내용을 입력하세요"></textarea>
-            </div>
-
-            <!-- 작성자 -->
-            <div class="form-group">
-                <label class="form-label">작성자</label>
-                <input type="text"
-                       class="form-input"
-                       id="author"
-                       name="author"
-                       placeholder="작성자 이름 (비워두면 '관리자'로 표시)">
-            </div>
-
-            <!-- 게시 기간 -->
-            <div class="form-group">
-                <label class="form-label">게시 시작일<span class="required">*</span></label>
-                <input type="datetime-local"
-                       class="form-input"
-                       id="startDate"
-                       name="startDate"
-                       required>
-                <p class="form-text">현재 일자보다 미래로 설정하면 예약 상태가 됩니다.</p>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">게시 종료일<span class="required">*</span></label>
-                <input type="datetime-local"
-                       class="form-input"
-                       id="endDate"
-                       name="endDate"
-                       required>
-                <p class="form-text">시작일로부터 +30일 권장</p>
-            </div>
-
-            <!-- 상단 고정 -->
-            <div class="form-group">
-                <div class="checkbox-group">
-                    <input type="checkbox"
-                           class="checkbox-input"
-                           id="pinned"
-                           name="pinned">
-                    <label for="pinned">상단 고정 게시글로 설정</label>
-                </div>
-            </div>
-
-            <!-- 첨부파일 -->
-            <div class="form-group">
-                <label class="form-label">첨부파일 (최대 5개, 총 90MB)</label>
-                <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
-                    <p>📁 파일을 선택하거나 드래그하세요</p>
-                    <p style="font-size: 12px; color: #999; margin-top: 10px;">
-                        jpg, jpeg, png, svg, gif, hwp, doc, docx, pdf, ppt, pptx, txt, xls, xlsx, gz, zip, mp4, avi, mov, wmv, flv, mkv
-                    </p>
-                </div>
-                <input type="file"
-                       id="fileInput"
-                       name="files"
-                       multiple
-                       accept=".jpg,.jpeg,.png,.svg,.gif,.hwp,.doc,.docx,.pdf,.ppt,.pptx,.txt,.xls,.xlsx,.gz,.zip,.mp4,.avi,.mov,.wmv,.flv,.mkv"
-                       class="file-input"
-                       onchange="handleFileSelect(event)">
-                <div id="fileList" class="file-list"></div>
-            </div>
-
-            <!-- 버튼 그룹 -->
-            <div class="btn-group">
-                <button type="button" class="btn btn-secondary" onclick="confirmBack()">돌아가기</button>
-                <button type="submit" class="btn btn-primary">게시하기</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div id="backModal" class="modal">
-    <div class="modal-content">
-        <h3>게시글 작성 취소</h3>
-        <p style="margin: 20px 0;">작성 중이던 문서가 저장되지 않습니다.<br>정말로 이 페이지에서 벗어나시겠습니까?</p>
-        <div class="modal-buttons">
-            <button class="btn btn-secondary" onclick="closeBackModal()">취소</button>
-            <button class="btn btn-primary" onclick="goBack()">확인</button>
+    <!-- 상단바 -->
+    <div class="top-bar">
+        <a href="/" class="logo">
+            <span class="logo-icon">🏙️</span>
+            <span>안양시 스마트도시 통합센터</span>
+        </a>
+        <div class="top-menu">
+            <a href="/">조회</a>
+            <a href="/notice/list">시민 서비스 조회/관리</a>
+            <a href="/award/list">운영 관리</a>
+            <a href="#">시설물 신고 관리</a>
+            <a href="/user/list">환경설정</a>
+            <a href="#" class="logout-btn">로그아웃</a>
         </div>
     </div>
-</div>
 
-<script>
-    let selectedFiles = [];
+    <!-- 사이드바 -->
+    <div class="sidebar">
+        <div class="sidebar-title">시민 서비스 조회/관리</div>
+        <ul class="sidebar-menu">
+            <li><a href="/notice/list">📢 공지사항</a></li>
+            <li><a href="/press/list">📰 보도자료</a></li>
+            <li><a href="/visit/list">📷 방문사진</a></li>
+            <li><a href="/video/list" class="active">🎥 홍보영상</a></li>
+        </ul>
+    </div>
 
-    function handleFileSelect(event) {
-        const files = Array.from(event.target.files);
+    <!-- 메인 컨텐츠 -->
+    <div class="main-content">
+        <div class="content-box">
+            <h1 class="page-title">📝 홍보영상 작성</h1>
 
-        if (selectedFiles.length + files.length > 5) {
-            alert('최대 5개의 첨부파일만 업로드 가능합니다.');
+            <form id="videoForm" enctype="multipart/form-data">
+                <!-- 제목 -->
+                <div class="form-group">
+                    <label class="form-label">제목<span class="required">*</span></label>
+                    <input type="text"
+                           class="form-input"
+                           id="title"
+                           name="title"
+                           required
+                           maxlength="200"
+                           placeholder="제목을 입력하세요">
+                </div>
+
+                <!-- 내용 -->
+                <div class="form-group">
+                    <label class="form-label">내용<span class="required">*</span></label>
+                    <textarea class="form-textarea"
+                              id="content"
+                              name="content"
+                              required
+                              placeholder="내용을 입력하세요"></textarea>
+                </div>
+
+                <!-- 작성자 -->
+                <div class="form-group">
+                    <label class="form-label">작성자</label>
+                    <input type="text"
+                           class="form-input"
+                           id="author"
+                           name="author"
+                           placeholder="작성자 이름 (비워두면 '관리자'로 표시)">
+                </div>
+
+                <!-- 유튜브 링크 -->
+                <div class="form-group">
+                    <label class="form-label">유튜브 링크</label>
+                    <input type="url"
+                           class="form-input"
+                           id="youtubeUrl"
+                           name="youtubeUrl"
+                           placeholder="https://www.youtube.com/watch?v=...">
+                    <p class="form-text">유튜브 영상 URL을 입력하세요. 입력하면 상세페이지에서 재생할 수 있습니다.</p>
+                </div>
+
+                <!-- 게시 기간 -->
+                <div class="form-group">
+                    <label class="form-label">게시 시작일<span class="required">*</span></label>
+                    <input type="datetime-local"
+                           class="form-input"
+                           id="startDate"
+                           name="startDate"
+                           required>
+                    <p class="form-text">현재 일자보다 미래로 설정하면 예약 상태가 됩니다.</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">게시 종료일<span class="required">*</span></label>
+                    <input type="datetime-local"
+                           class="form-input"
+                           id="endDate"
+                           name="endDate"
+                           required>
+                    <p class="form-text">시작일로부터 +30일 권장</p>
+                </div>
+
+                <!-- 상단 고정 -->
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox"
+                               class="checkbox-input"
+                               id="pinned"
+                               name="pinned">
+                        <label for="pinned">상단 고정 게시글로 설정</label>
+                    </div>
+                </div>
+
+                <!-- 첨부파일 -->
+                <div class="form-group">
+                    <label class="form-label">첨부파일 (최대 5개, 총 90MB)</label>
+                    <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
+                        <p>📁 파일을 선택하거나 드래그하세요</p>
+                        <p>jpg, jpeg, png, svg, gif, hwp, doc, docx, pdf, ppt, pptx, txt, xls, xlsx, gz, zip, mp4, avi, mov, wmv, flv, mkv</p>
+                    </div>
+                    <input type="file"
+                           id="fileInput"
+                           name="files"
+                           multiple
+                           accept=".jpg,.jpeg,.png,.svg,.gif,.hwp,.doc,.docx,.pdf,.ppt,.pptx,.txt,.xls,.xlsx,.gz,.zip,.mp4,.avi,.mov,.wmv,.flv,.mkv"
+                           class="file-input"
+                           onchange="handleFileSelect(event)">
+                    <div id="fileList" class="file-list"></div>
+                </div>
+
+                <!-- 버튼 그룹 -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" onclick="confirmBack()">돌아가기</button>
+                    <button type="submit" class="btn btn-primary">게시하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 돌아가기 확인 모달 -->
+    <div id="backModal" class="modal">
+        <div class="modal-content">
+            <h3>게시글 작성 취소</h3>
+            <p>작성 중이던 문서가 저장되지 않습니다.<br>정말로 이 페이지에서 벗어나시겠습니까?</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeBackModal()">취소</button>
+                <button class="btn btn-primary" onclick="goBack()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFiles = [];
+
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+
+            if (selectedFiles.length + files.length > 5) {
+                alert('최대 5개의 첨부파일만 업로드 가능합니다.');
+                event.target.value = '';
+                return;
+            }
+
+            let totalSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
+            totalSize += files.reduce((sum, file) => sum + file.size, 0);
+
+            if (totalSize > 90 * 1024 * 1024) {
+                alert('총 90MB의 파일을 업로드 할 수 없습니다.');
+                event.target.value = '';
+                return;
+            }
+
+            selectedFiles = selectedFiles.concat(files);
+            displayFileList();
             event.target.value = '';
-            return;
         }
 
-        let totalSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
-        totalSize += files.reduce((sum, file) => sum + file.size, 0);
+        function displayFileList() {
+            const fileListDiv = document.getElementById('fileList');
+            fileListDiv.innerHTML = '';
 
-        if (totalSize > 90 * 1024 * 1024) {
-            alert('총 90MB의 파일을 업로드 할 수 없습니다.');
-            event.target.value = '';
-            return;
+            selectedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+
+                const fileInfo = document.createElement('div');
+                fileInfo.className = 'file-item-info';
+                fileInfo.innerHTML = `
+                    <span>📎</span>
+                    <span>${file.name} (${formatFileSize(file.size)})</span>
+                `;
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'file-remove';
+                removeBtn.textContent = '삭제';
+                removeBtn.type = 'button';
+                removeBtn.onclick = () => removeFile(index);
+
+                fileItem.appendChild(fileInfo);
+                fileItem.appendChild(removeBtn);
+                fileListDiv.appendChild(fileItem);
+            });
         }
 
-        selectedFiles = selectedFiles.concat(files);
-        displayFileList();
-        event.target.value = '';
-    }
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            displayFileList();
+        }
 
-    function displayFileList() {
-        const fileListDiv = document.getElementById('fileList');
-        fileListDiv.innerHTML = '';
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
 
-        selectedFiles.forEach((file, index) => {
-            const fileItem = document.createElement('div');
-            fileItem.className = 'file-item';
+        function confirmBack() {
+            document.getElementById('backModal').style.display = 'block';
+        }
 
-            const fileInfo = document.createElement('div');
-            fileInfo.className = 'file-item-info';
-            fileInfo.innerHTML = `
-                <span>📎</span>
-                <span>${file.name} (${formatFileSize(file.size)})</span>
-            `;
+        function closeBackModal() {
+            document.getElementById('backModal').style.display = 'none';
+        }
 
-            const removeBtn = document.createElement('button');
-            removeBtn.className = 'file-remove';
-            removeBtn.textContent = '삭제';
-            removeBtn.type = 'button';
-            removeBtn.onclick = () => removeFile(index);
-
-            fileItem.appendChild(fileInfo);
-            fileItem.appendChild(removeBtn);
-            fileListDiv.appendChild(fileItem);
-        });
-    }
-
-    function removeFile(index) {
-        selectedFiles.splice(index, 1);
-        displayFileList();
-    }
-
-    function formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
-    }
-
-    function confirmBack() {
-        document.getElementById('backModal').style.display = 'block';
-    }
-
-    function closeBackModal() {
-        document.getElementById('backModal').style.display = 'none';
-    }
-
-    function goBack() {
-        location.href = '/video/list';
-    }
-
-    window.onload = function() {
-        const now = new Date();
-        const startDate = new Date(now);
-        const endDate = new Date(now);
-        endDate.setDate(endDate.getDate() + 30);
-
-        document.getElementById('startDate').value = formatDateTime(startDate);
-        document.getElementById('endDate').value = formatDateTime(endDate);
-    };
-
-    function formatDateTime(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        return `${year}-${month}-${day}T${hours}:${minutes}`;
-    }
-
-    document.getElementById('videoForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const formData = new FormData();
-        formData.append('title', document.getElementById('title').value);
-        formData.append('content', document.getElementById('content').value);
-        formData.append('author', document.getElementById('author').value);
-        formData.append('startDate', document.getElementById('startDate').value);
-        formData.append('endDate', document.getElementById('endDate').value);
-        formData.append('pinned', document.getElementById('pinned').checked);
-
-        selectedFiles.forEach(file => {
-            formData.append('files', file);
-        });
-
-        fetch('/video/api/save', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => {
-                    throw new Error(text);
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.status === '예약') {
-                const startDate = new Date(data.startDate);
-                const dateStr = formatDateTime(startDate).replace('T', ' ');
-                alert(`작성하신 글이 ${dateStr} 게시예정입니다.`);
-            } else {
-                alert('작성하신 글이 게시되었습니다.');
-            }
+        function goBack() {
             location.href = '/video/list';
-        })
-        .catch(error => {
-            alert('등록 중 오류가 발생했습니다:\n' + error.message);
-            console.error('Error:', error);
+        }
+
+        window.onload = function() {
+            const now = new Date();
+            const startDate = new Date(now);
+            const endDate = new Date(now);
+            endDate.setDate(endDate.getDate() + 30);
+
+            document.getElementById('startDate').value = formatDateTime(startDate);
+            document.getElementById('endDate').value = formatDateTime(endDate);
+        };
+
+        function formatDateTime(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+
+        document.getElementById('videoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('content', document.getElementById('content').value);
+            formData.append('author', document.getElementById('author').value);
+            formData.append('youtubeUrl', document.getElementById('youtubeUrl').value);
+            formData.append('startDate', document.getElementById('startDate').value);
+            formData.append('endDate', document.getElementById('endDate').value);
+            formData.append('pinned', document.getElementById('pinned').checked);
+
+            selectedFiles.forEach(file => {
+                formData.append('files', file);
+            });
+
+            fetch('/video/api/save', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === '예약') {
+                    const startDate = new Date(data.startDate);
+                    const dateStr = formatDateTime(startDate).replace('T', ' ');
+                    alert(`작성하신 글이 ${dateStr} 게시예정입니다.`);
+                } else {
+                    alert('작성하신 글이 게시되었습니다.');
+                }
+                location.href = '/video/list';
+            })
+            .catch(error => {
+                alert('등록 중 오류가 발생했습니다:\n' + error.message);
+                console.error('Error:', error);
+            });
         });
-    });
-</script>
+    </script>
 </body>
 </html>
